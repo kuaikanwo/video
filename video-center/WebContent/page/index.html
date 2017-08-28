@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Hello MUI</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="./css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="./css/app.css"/>
+	<link rel="stylesheet" type="text/css" href="./css/icons-extra.css" />
+	<link href="./css/icon.css" rel="stylesheet" />
+	<link href="./css/mcss/index.css" rel="stylesheet" />
+</head>
+
+<body  style="background-color: #efeff4;" oncontextmenu="return false" onselectstart="return false">
+<header class="mui-bar mui-bar-nav m-bar">
+	<a class="species"><span class="mui-icon mui-icon-extra mui-icon-extra-gold" style="font-size: 16px;"><span class="species-count" id="species-count">000</span></span></a>
+	<div class="m-search">
+		<input type="text" class="search-input" onkeydown="getVideoTitle(this)" onkeyup="getVideoTitle(this)">
+		<span class="mui-icon mui-icon-search search-span"></span>
+		<div class="search-content-wrapper">
+			<div class="search-content">
+				<ul class="title-wrapper">
+					 <!-- <li >Item 1</li>
+			         <li >Item 2</li>
+			         <li >Item 3</li> -->
+				</ul>
+			</div>
+		</div>
+	</div>
+	<a class="home-btn" disabled="disabled" href="javascript:showMenu()"><span class="mui-icon mui-icon-bars"></span></a>
+	<ul class="menu-right">
+		<li style="width: 100%;padding-bottom: 0px;">
+			<img alt="" src="./images/header.png" style= "width:30px">
+			<a href="register.html" id="login-btn">立即登陆</a>
+		</li>
+		<!-- <li>
+			<a href="javascript:showUpload()">
+				<span class="mui-icon mui-icon-upload"></span>
+				<span>上传视频</span>
+				
+			</a>
+		</li> -->
+		<li>
+			<a href="javascript:requestPage('my-upload.html')">
+				<span class="mui-icon-extra mui-icon-extra-computer"></span>
+				<span>我的上传</span>
+			</a>
+		</li>
+		<li id="logoutLi">
+			<a href="javascript:clearLoginInfo()">
+				<span class="mui-icon mui-icon-closeempty"></span>
+				<span>注销登陆</span>
+			</a>
+		</li>
+		<!-- <li>
+			<a href="viewed.html">
+				<span class="mui-icon mui-icon-eye"></span>
+				<span>观看历史</span>
+			</a>
+		</li> -->
+		<!-- <li>
+			<a href="javascript:requestPage('collect.html')">
+				<span class="mui-icon-extra mui-icon-extra-heart-filled"></span>
+				<span>我的收藏</span>
+			</a>
+		</li> -->
+	</ul>
+</header>
+<div class="mui-content">
+	<!--下拉刷新容器-->
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+
+		<div class="mui-scroll">
+			<!--数据列表-->
+			<ul class="mui-table-view" onclick="alertCount()" >
+
+			</ul>
+		</div>
+
+	</div>
+</div>
+</body>
+<script src="./js/mui.min.js"></script>
+<script language="javascript" type="text/javascript"> 
+	//防止js文件缓存下来，以后更新时不再需要用户重新删除IE文件等操作。 
+	var now=new Date(); 
+	var number = now.getYear().toString()+now.getMonth().toString()+now.getDate().toString()+now.getHours().toString()+now.getMinutes().toString()+now.getSeconds().toString(); 
+	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/validate.js?'+number+'"><\/script>'); 
+	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/index.js?'+number+'"><\/script>');
+</script> 
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.core.mapper.TokenMapper">
+    <update id="update" parameterType="Token">
+    	UPDATE `t_token` SET `last_update_time`=#{lastUpdateTime} WHERE (`id`=#{id});
+    </update>
+    <select id="getTokenByUserId" parameterType="string" resultType="Token">
+    	SELECT * FROM T_TOKEN WHERE USER_ID = #{userId}
+    </select>	
+    <insert id="add" parameterType="Token">
+    	INSERT INTO `t_token` (`id`, `user_id`, `token`, `last_update_time`) VALUES (#{id}, #{userId}, #{token}, #{lastUpdateTime});
+    </insert>
+</mapper>

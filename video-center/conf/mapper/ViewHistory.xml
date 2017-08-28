@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.core.mapper.ViewHistoryMapper">	
+	<!--  查询单条记录  -->  
+    <select id="getByUserId" parameterType="string" resultMap="viewHistoryMap">  
+       SELECT * FROM T_view_history WHERE user_id = #{userId} 
+    </select>  
+    <insert id="add" parameterType="ViewHistory">
+    	INSERT INTO `test-mt`.`t_view_history` (`id`, `video_id`, `user_id`, `crt_time`) VALUES (#{id}, #{videoId}, #{userId}, #{crtTime});
+    </insert>
+    
+    <resultMap type="ViewHistory" id="viewHistoryMap">
+    	<id column="id" property="id"/>
+    	<result column="video_id" property="videoId"/>
+    	<result column="user_id" property="userId"/>
+    	<result column="crt_time" property="crtTime"/>
+    </resultMap>
+</mapper>

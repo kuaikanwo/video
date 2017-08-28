@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Hello MUI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="./css/mui.min.css">
+    <!--App自定义的css-->
+    <link rel="stylesheet" type="text/css" href="./css/app.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/icons-extra.css" />
+    <style>
+        #pullrefresh{
+            top: 40px;
+        }
+        .mui-table-view-cell {
+            padding: 0px;
+        }
+        .mui-table-view-cell::after{
+            height: 0px;
+        }
+        .mui-table-view{
+            background-color: #efeff4;
+        }
+        .mui-card {
+            margin: 10px 10px 0px 10px;
+        }
+        #icon-icon-contact{
+            color: #8F8F94;
+        }
+        .m-bar{
+            padding-top: 10px;
+        }
+        .m-bar>a>span{
+            font-weight: bolder;
+            color: #8F8F94;
+        }
+        .search-div{
+            position: absolute;
+        }
+        .species span{
+            color: rgb(250,227, 113) !important;
+        }
+        .species-count{
+            font-size: 16px;
+            font-weight: normal !important;
+            display: inline-block;
+            padding-left: 2px;
+            margin-top: 5px;
+        }
+        .menu-right{
+            position: absolute;
+            top: 44px;
+            right: 10px;
+            display: none;
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+            background-color: #FFFFFF;
+            color: #767676;
+            padding-bottom: 20px;
+            border-radius: 2px;
+        }
+        .menu-right .mui-icon{
+            font-size: 18px;
+        }
+        .menu-right .mui-icon-extra{
+            font-size: 18px;
+        }
+        .menu-right li{
+            height: 40px;
+            text-align: center;
+            padding: 10px 15px;
+            display: table;
+        }
+        .menu-right li:hover{
+            background-color: #EEEEEE;
+        }
+        .menu-right>li>a{
+            color: #8F8F94;
+        }
+        .menu-right>li>a>span:last-child{
+            font-size: 15px;
+            padding: 0px 10px;
+        }
+        .mui-card-footer>a span{
+            color: #8F8F94;
+        }
+        .upload-window{
+			position: absolute;
+			top: 44px;
+			left: 0px;
+			display: none;
+			width: 100%;
+			height: 100%;
+			background-color: #ffffff;
+			z-index: 2;
+		}
+		.mui-input-group .mui-input-row:after{
+			left:0;
+		}
+    </style>
+</head>
+
+<body style="background-color: #efeff4;" oncontextmenu="return false" onselectstart="return false">
+<header class="mui-bar mui-bar-nav">
+    <a href="index.html" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">我的上传</h1>
+    <a class="mui-icon-right-nav mui-pull-right" href="javascript:showUpload()">
+    	<img alt="" src="./images/upload.png" style="width: 25px;padding-top: 9px;margin-right: 20px;">
+    </a>
+</header>
+<div class="mui-content">
+    <!--下拉刷新容器-->
+    <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+
+        <div class="mui-scroll">
+            <!--数据列表-->
+            <ul class="mui-table-view">
+
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="upload-window">
+	<div class="vedio-wrapper">
+		<form class="mui-input-group" enctype="multipart/form-data" method="post" style="margin-top: 20px" name="fileinfo">
+			<span id="file_span">
+					<!-- <input type="file" name="file" style="display: none" id="input_file" onchange="handleFiles(this.files)"> -->
+				</span>
+			<div class="mui-input-row">
+				<label>标题</label>
+				<input type="text" name="title" id="title" placeholder="请输入标题"  class="mui-input-clear">
+			</div>
+			<div class="mui-input-row" style="height: 170px;text-align: center">
+				<img alt="" src="./images/videoIcon.png" width="50%">
+			</div>
+			<div class="mui-input-row  mui-left" style="line-height: 40px;padding-left: 10px;    height: 150px;">
+				<input name="checkbox" value="Item 2" type="checkbox" checked="">
+				<label style="font-size: 12px;float: none" >我已阅读并接受上传协议</label>
+				<p style="line-height: 20px;padding-right: 10px;height: 100px; overflow-y: auto;">
+					为响应国家九部委联合开展深入整治互联网和手机媒体淫秽色情及低俗信息专项行动的号召，营造一个健康文明的网络环境，给大家一个和谐积极的家园。
+
+					不得上传任何有违国家法律法规的视频。
+
+					不得上传具有色情内容的视频。
+
+					不得上传内容低俗，格调不高的视频。
+
+					不得上传具有色情诱导性内容的视频。
+
+					不得在标题、简介和标签中出现任何具有低俗色情含义的字眼。
+
+					不含有涉及版权问题的影视片段。
+					如果您上传了这些内容，我们将一律予以删除，我们希望我们最珍贵的网友们，理解并监督我们。
+				</p>
+			</div>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary" onclick="uploadVideo(this)" style="width: 80px;">上传</button>&nbsp;&nbsp;
+				<button type="button" class="mui-btn mui-btn-danger" style="width: 80px;" onclick="closeUploadWindow()">取消</button>&nbsp;&nbsp;
+			</div>
+		</form>
+	</div>
+</div>
+<div class="mui-pull-bottom-pocket mui-block mui-visibility"><div class="mui-pull"><div class="mui-pull-loading mui-icon mui-spinner mui-visibility"></div><div class="mui-pull-caption mui-pull-caption-refresh">正在加载...</div></div></div>
+</body>
+<script src="./js/mui.min.js"></script>
+<script src="./js/mjs/validate.js"></script>
+<script src="./js/mjs/my-upload.js"></script>
+</html>

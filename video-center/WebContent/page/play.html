@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Hello MUI</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="./css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="./css/app.css"/>
+	<link rel="stylesheet" type="text/css" href="./css/icons-extra.css" />
+	<link href="http://vjs.zencdn.net/5.19/video-js.css" rel="stylesheet">
+    <script src="http://vjs.zencdn.net/ie8/1.1/videojs-ie8.min.js"></script>
+    <script src="http://vjs.zencdn.net/5.19/video.js"></script>
+	<style>
+		.m-bar>a>span{
+			font-weight: bolder;
+			color: #8F8F94;
+		}
+		.mui-card-footer>a span{
+			color: #8F8F94;
+		}
+		::-webkit-scrollbar{
+			width: 0px;
+		}
+		.video-wrapper{
+			width: 100%
+			margin: 0px auto;
+			background-color: #ffffff;
+			text-align: center;
+			padding: 10px;
+		}
+		.video-wrapper video{
+			width: 355px;
+			height: 219px;
+			object-fit: fill;
+		}
+		.operation-wrapper{
+			display: table;
+		}
+		.operation-wrapper>div{
+			display: table-cell;
+		}
+		.active>span{
+			color: #007aff !important;
+		}
+		.video-list{
+			padding-top: 40px;
+		}
+		.video-list .mui-card{
+			box-shadow: none;
+		}
+		.video-list .mui-card{
+			margin: 0px 10px;
+		}
+		.video-list .mui-table-view-cell{
+			padding: 0px;
+		}
+		.video-list .mui-table-view-cell:after{
+			height: 0px;
+		}
+		.video-js{
+			width: 100%;
+		}
+	</style>
+</head>
+
+<body  style="background-color: #efeff4;" oncontextmenu="return false" onselectstart="return false">
+<header class="mui-bar mui-bar-nav m-bar">
+	<a id="back-btn" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title" id="video-title">再看我就喝掉你</h1>
+	<a class=" mui-pull-right" href="javascript:shareVideo()"><span class=" mui-icon mui-icon-redo" style="padding-top: 10px;"></span></a>
+	<!-- <a class="active mui-pull-right" style="    margin-right: 10px;"><span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled"></span></a> -->
+</header>
+<div class="mui-content">
+	<div class="video-wrapper">
+		 <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" 
+		 width="300" height="264"  data-setup="{}">
+		 <!-- <source src="/fileController.do?downloadVideo&fileName=4028ea815e2207f9015e2207f9530000.mp4" type="video/mp4"> -->
+    <!-- <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+    <source src="http://vjs.zencdn.net/v/oceans.webm" type="video/webm">
+    <source src="http://vjs.zencdn.net/v/oceans.ogv" type="video/ogg"> -->
+  </video>
+	</div>
+	<div class="recommend-wrapper ">
+		<header class="">
+			<h1 class="mui-title">热门视频</h1>
+		</header>
+		<div class="video-list">
+			<ul class="mui-table-view">
+				<!-- <li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-card">
+						<div class="mui-card-header mui-card-media">
+							<img src="./images/a.jpg">
+							<div class="mui-media-body">
+								小M
+								<p>发表于 2016-06-30 15:30  2000次播放</p>
+							</div>
+						</div>
+					</div>
+				</li> -->
+			</ul>
+		</div>
+	</div>
+</div>
+</body>
+<script src="./js/mui.min.js"></script>
+<script src="./js/mjs/validate.js"></script>
+<script src="./js/mjs/play.js"></script>
+</html>

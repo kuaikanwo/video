@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.core.mapper.VideoMapper">	
+    
+    <update id="increasePlayCount">
+    	UPDATE T_VIDEO SET PLAY_COUNT = (PLAY_COUNT+1) WHERE ID= #{id}
+    </update>
+    
+    <update id="delete">
+    	UPDATE T_VIDEO SET IS_DELETE = 1 WHERE ID= #{id}
+    </update>
+    
+    <sql id="baseSql">
+    	SELECT * FROM T_VIDEO
+    </sql>
+    
+    <select id="getTitles" resultType="string">
+    	SELECT TITLE FROM T_VIDEO WHERE TITLE LIKE CONCAT('%',#{title},'%' ) AND IS_DELETE = 0
+    </select>
+    
+    <select id="getHot" resultMap="VideoMap">
+    	<include refid="baseSql"></include>
+    	WHERE  IS_DELETE = 0  ORDER BY PLAY_COUNT DESC limit 0 , 10 
+    </select>
+    
+    <select id="getById" resultMap="VideoMap">
+    	 <include refid="baseSql"></include>
+    	 WHERE ID=#{id}
+    </select>
+    
+    <select id="queryAllVideo" parameterType="Video" resultMap="VideoMap">
+    	<include refid="baseSql"></include>
+    	 WHERE 1=1
+    	<if test="title != null">
+    		AND TITLE LIKE CONCAT('%',#{title},'%' ) 
+    	</if> 
+    	<if test="crtUserId != null">
+    		AND CRT_BY_USER_ID = #{crtUserId}
+    	</if>
+    	AND IS_DELETE = #{isDelete} ORDER BY PLAY_COUNT DESC,CRT_TIME DESC limit #{index}, #{pageSize}
+    </select>
+    
+    <insert id="add" parameterType="Video">
+    	INSERT INTO `t_video` (`id`, `title`, `file_name`, `play_count`,`thumbnail_path`, `crt_by_user_id`,
+    	 `crt_by_user_name`, `crt_time`, `is_delete`) VALUES (#{id}, #{title}, #{fileName}, 0, #{thumbnailPath}, #{crtUserId}, #{crtUserName}, #{crtTime}, 0);
+    </insert>
+    
+    <resultMap type="Video" id="VideoMap">
+    	<id column="id" property="id"/>
+    	<result column="title" property="title"/>
+    	<result column="file_name" property="fileName"/>
+    	<result column="play_count" property="playCount"/>
+    	<result column="thumbnail_path" property="thumbnailPath"/>
+    	<result column="crt_by_user_id" property="crtUserId"/>
+    	<result column="crt_by_user_name" property="crtUserName"/>
+    	<result column="crt_time" property="crtTime"/>
+    	<result column="is_delete" property="isDelete"/>
+    </resultMap>
+</mapper>

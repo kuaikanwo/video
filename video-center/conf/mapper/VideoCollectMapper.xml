@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.core.mapper.VideoCollectMapper" >
+  <resultMap id="BaseResultMap" type="VideoCollect" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="video_id" property="videoId" jdbcType="VARCHAR" />
+    <result column="video_title" property="videoTitle" jdbcType="VARCHAR" />
+    <result column="video_thumbnail_path" property="videoThumbnailPath" jdbcType="VARCHAR" />
+    <result column="video_crt_time" property="videoCrtTime" jdbcType="TIMESTAMP" />
+    <result column="video_file_name" property="videoFileName" jdbcType="VARCHAR" />
+    <result column="video_crt_by_user_id" property="videoCrtByUserId" jdbcType="VARCHAR" />
+    <result column="video_crt_by_user_name" property="videoCrtByUserName" jdbcType="VARCHAR" />
+    <result column="collect_usr_id" property="collectUsrId" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <select id="getMyCollect">
+  	select 
+  	<include refid="Base_Column_List" />
+    from t_video_collect
+    where collect_usr_id = #{crtUserId}  and is_delete = 0
+    <if test="title != null">
+    	and title like CONCAT('%','#{title}','%' ) 
+    </if>
+    ORDER BY CRT_TIME DESC limit #{index}, #{pageSize}
+  </select>
+  
+  <sql id="Base_Column_List" >
+    id, video_id, video_title, video_thumbnail_path, video_crt_time, video_file_name, 
+    video_crt_by_user_id, video_crt_by_user_name
+  </sql>
+  
+  <insert id="insert" parameterType="com.transfar.webportal.chp.model.vo.TVideoCollect" >
+    insert into t_video_collect (id, video_id, video_title, 
+      video_thumbnail_path, video_crt_time, video_file_name, 
+      video_crt_by_user_id, video_crt_by_user_name, collect_usr_id, 
+      is_delete)
+    values (#{id,jdbcType=VARCHAR}, #{videoId,jdbcType=VARCHAR}, #{videoTitle,jdbcType=VARCHAR}, 
+      #{videoThumbnailPath,jdbcType=VARCHAR}, #{videoCrtTime,jdbcType=TIMESTAMP}, #{videoFileName,jdbcType=VARCHAR}, 
+      #{videoCrtByUserId,jdbcType=VARCHAR}, #{videoCrtByUserName,jdbcType=VARCHAR}, #{collectUsrId,jdbcType=VARCHAR}, 
+      0)
+  </insert>
+  
+  <update id="delete">
+  	UPDATE T_VIDEO_COLLECT SET IS_DELETE = 1 WHERE ID = #{id}
+  </update>
+</mapper>
