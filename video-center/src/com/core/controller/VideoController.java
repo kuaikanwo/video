@@ -70,7 +70,6 @@ public class VideoController {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
 		} else {
 			if (CheckUtil.isUnLogin(request)) {
-				aj.setMsg(Constant.USER_UN_LOGIN);
 				aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
 			} else {
 				videoService.delete(id);
@@ -95,7 +94,6 @@ public class VideoController {
 	public AjaxJson queryMyupload(HttpServletRequest request, String title, Integer pageNo) throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (CheckUtil.isUnLogin(request)) {
-			aj.setMsg(Constant.USER_UN_LOGIN);
 			aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
 		} else {
 			aj.setStatus(Constant.SUCCESS_CODE);
@@ -127,76 +125,68 @@ public class VideoController {
 	}
 
 	@RequestMapping(params = "downloadVideo")
-	public void download(String videoId, String userId, HttpServletResponse response, HttpServletRequest request) {
+	public void downloadVideo(String id, String userId, HttpServletResponse response, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		
 		//验证是否登录
-		if (StringUtils.isEmpty(videoId) || StringUtils.isEmpty(userId)) {
+		if (StringUtils.isEmpty(id) || StringUtils.isEmpty(userId)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
 		} else {
-			Video video = videoService.getById(videoId);
+			//观看次数加1
+			videoService.increasePlayCount(id);
 			
-			//校验金币数量是否足够，如果足够就减10
-			
-			if (goldCount == 0) {
-				aj.setStatus(Constant.NO_GOLD);
-			} else {
-				ViewHistory vhis = viewHistoryService.getByUserId(userId);
-				//如果之前没有看过
-				if(vhis == null) {
-					//判断观看者是不是视频创建者
-					if (!video.getCrtUserId().equals(userId) ) {
-						
-						
-						Integer goldCount = UserService.getGoldCount(userId);
-						if (goldCount == 0) {
-							aj.setStatus(Constant.NO_GOLD);
-							return aj;
-						} else {
-							UserService.updateGoldCount(Constant.VIEW_VIDEO_PROPORTION_GOLD,
-									ResourceUtil.getCurrentUserId(request));
-						}
-						
-						
+			//之前是否观看过
+			ViewHistory vhis = viewHistoryService.getByUserIdAndVideoId(userId, id);
+			Video video = videoService.getById(id);
+			String path = null;
+			if(vhis == null) {
+				//之前没有观看过，再校验观看者是不是视频创建者
+				if(!video.getCrtUserId().equals(userId)){
+					//如果不是创建者，判断金币是否足够
+					Integer goldCount = UserService.getGoldCount(userId);
+					if (goldCount >= 10){
+						UserService.updateGoldCount(Constant.VIEW_VIDEO_PROPORTION_GOLD, userId);
+						path = Constant.VIDEO_PATH+video.getFileName();
 					}
-					
-					//保存一条观看记录到数据库
-					ViewHistory nhis = new ViewHistory();
-					
-					nhis.setVideoId(videoId);
-					nhis.setUserId(userId);
-					viewHistoryService.add(nhis);
+					else{
+						//返回提示用户金币不足的视频
+						path = Constant.VIDEO_PATH+"notice.mp4";
+					}
+				}else{
+					path = Constant.VIDEO_PATH+video.getFileName();
 				}
+				//保存一条观看记录到数据库
+				ViewHistory nhis = new ViewHistory();
 				
-				//减去金币数量之后提供视频
-				try {
-		            // path是指欲下载的文件的路径。
-		        	String path = Constant.VIDEO_PATH+video.getFileName();
-		            File file = new File(path);
-		            // 以流的形式下载文件。
-		            InputStream fis = new BufferedInputStream(new FileInputStream(path));
-		            byte[] buffer = new byte[fis.available()];
-		            fis.read(buffer);
-		            fis.close();
-		            // 清空response
-		            response.reset();
-		            // 设置response的Header
-		          /*  response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));*/
-		            response.addHeader("Content-Length", "" + file.length());
-		            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-		            response.setContentType("video/mp4");
-		            response.setHeader("Access-Control-Allow-Origin", "*");
-		            response.setHeader("Cache-Control", "max-age=31536000");
-		            toClient.write(buffer);
-		            toClient.flush();
-		            toClient.close();
-		        } catch (IOException ex) {
-		        	logger.info(ex.getMessage());
-		        }
-				
-				//播放次数加1
-				videoService.increasePlayCount(videoId);
+				nhis.setVideoId(id);
+				nhis.setUserId(userId);
+				viewHistoryService.add(nhis);
+			}else{
+				path = Constant.VIDEO_PATH+video.getFileName();
 			}
+			try {
+	            // path是指欲下载的文件的路径。
+	            File file = new File(path);
+	            // 以流的形式下载文件。
+	            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+	            byte[] buffer = new byte[fis.available()];
+	            fis.read(buffer);
+	            fis.close();
+	            // 清空response
+	            response.reset();
+	            // 设置response的Header
+	          /*  response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));*/
+	            response.addHeader("Content-Length", "" + file.length());
+	            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+	            response.setContentType("video/mp4");
+	            response.setHeader("Access-Control-Allow-Origin", "*");
+	            response.setHeader("Cache-Control", "max-age=31536000");
+	            toClient.write(buffer);
+	            toClient.flush();
+	            toClient.close();
+	        } catch (IOException ex) {
+	        	logger.info(ex.getMessage());
+	        }
 		}
     }
 
@@ -214,7 +204,6 @@ public class VideoController {
 	public AjaxJson upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (CheckUtil.isUnLogin(request)) {
-			aj.setMsg(Constant.USER_UN_LOGIN);
 			aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
 		} else {
 			String title = request.getParameter("title");
@@ -241,38 +230,6 @@ public class VideoController {
 	}
 
 	/**
-	 * 播放次数加1
-	 * 
-	 * @param request
-	 * @param id
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "playing", method = RequestMethod.POST)
-	@ResponseBody
-	public AjaxJson playing(HttpServletRequest request, String id) throws Exception {
-		AjaxJson aj = new AjaxJson();
-		if (StringUtils.isEmpty(id) || CheckUtil.isUnLogin(request)) {
-			aj.setMsg(Constant.USER_UN_LOGIN);
-			aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
-		} else {
-			videoService.increasePlayCount(id);
-			Video video = videoService.getById(id);
-			// 观看者金币减10
-			String curUserId = ResourceUtil.getCurrentUserId(request);
-			Integer goldCount = UserService.getGoldCount(curUserId);
-			if (goldCount == 0) {
-				aj.setStatus(Constant.NO_GOLD);
-			} else {
-				if (!video.getCrtUserId().equals(curUserId))
-					UserService.updateGoldCount(Constant.VIEW_VIDEO_PROPORTION_GOLD,
-							ResourceUtil.getCurrentUserId(request));
-			}
-		}
-		return aj;
-	}
-
-	/**
 	 * 收藏视频
 	 * 
 	 * @param request
@@ -288,7 +245,6 @@ public class VideoController {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
 		} else {
 			if (CheckUtil.isUnLogin(request)) {
-				aj.setMsg(Constant.USER_UN_LOGIN);
 				aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
 			} else {
 				VideoCollect vc = new VideoCollect();
@@ -317,7 +273,6 @@ public class VideoController {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
 		} else {
 			if (CheckUtil.isUnLogin(request)) {
-				aj.setMsg(Constant.USER_UN_LOGIN);
 				aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
 			} else {
 				videoCollectService.delete(collectId);

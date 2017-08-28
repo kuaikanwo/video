@@ -121,7 +121,6 @@ public class UserController {
 	public AjaxJson getGoldCount(HttpServletRequest req) {
 		AjaxJson j = new AjaxJson();
         if(CheckUtil.isUnLogin(req)){
-        	j.setMsg(Constant.USER_UN_LOGIN);
         	j.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
         }else{
         	j.setObj(userService.getGoldCount(ResourceUtil.getCurrentUserId(req)));

@@ -38,13 +38,14 @@ function pullupRefresh(){
             	        var cells = mtools.getEl('.mui-table-view-cell');
 
             	        for (var i = 0; i < obj.length; i++) {
+            	        	console.log(obj[i].thumbnailPath);
             	            var li = document.createElement('li');
             	            li.className = 'mui-table-view-cell';
-            	            li.innerHTML = '<div class="mui-card"><a href="play.html?thumbnailPath='+obj[i].thumbnailPath+'&fileName='+obj[i].fileName+'&id='+obj[i].id+'&last=my-upload.html">'+
+            	            li.innerHTML = '<div class="mui-card"><a href="play.html?title='+obj[i].title+'&thumbnailPath='+obj[i].thumbnailPath+'&fileName='+obj[i].fileName+'&id='+obj[i].id+'&last=my-upload.html">'+
             	                '<div class="mui-card-header mui-card-media">'+
             	            '<img onerror="this.src=\'./resource/404.png\'"  src="/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'">'+
             	            '<div class="mui-media-body">'+
-            	            ' 小M'+
+            	           obj[i].crtUserName+ '<span class="video-title">'+obj[i].title+'</span>' +
             	            ' <p>发表于 '+obj[i].crtTime+'   '+obj[i].playCount+'次播放</p>'+
             	            '</div>'+
             	            ' </div></a>'+
@@ -87,8 +88,8 @@ function uploadVideo(obj){
 		mui.toast('请补全信息');
 	}else{
 		var relSize = parseInt(_file.size/1024/1024); 
-		if(relSize > 50){ // 大于10mb 
-			mui.alert('视频超过50MB,您可使用视频压缩工具进行压缩处理！', '提示', function() {});
+		if(relSize > 30){ // 大于10mb 
+			mui.alert('视频超过30MB,您可使用视频压缩工具进行压缩处理！', '提示', function() {});
 			return false; 
 		} 
 		// 查看视频类型 
@@ -107,6 +108,7 @@ function uploadVideo(obj){
 		var formData = new FormData(form);
     	mui.ajax('/videoController.do?upload', {
         	type: 'POST',
+        	async: 'true',
         	headers:{
         		'token': mtools.getToken(),
         		'userId': mtools.getUserId(),
@@ -122,8 +124,7 @@ function uploadVideo(obj){
         	success: function(data){
         		closeUploadWindow();
         		mtools.resetGoldCount();
-        		mtools.getEl('.mui-table-view').innerHTML = '';
-        		mui('#pullrefresh').pullRefresh().pullupLoading();
+        		window.location.reload();
         	},
         	error: function(data){
         		mui.toast('系统异常，请稍后重试！');

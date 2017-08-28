@@ -16,15 +16,16 @@ public class ViewHistoryServiceImp implements ViewHistoryServiceI{
 	private ViewHistoryMapper viewHistoryMapper;
 
 	@Override
-	public ViewHistory getByUserId(String id) {
-		return viewHistoryMapper.getByUserId(id);
+	public ViewHistory getByUserIdAndVideoId(String id, String videoId) {
+		return viewHistoryMapper.getByUserIdAndVideoId(id, videoId);
 	}
 
 	@Override
 	public ViewHistory add(ViewHistory vhis) {
 		vhis.setId(UUIDGenerator.generate());
 		vhis.setCrtTime(DateUtils.getDate());
-		return viewHistoryMapper.add(vhis);
+		viewHistoryMapper.add(vhis);
+		return vhis;
 	}
 
 	

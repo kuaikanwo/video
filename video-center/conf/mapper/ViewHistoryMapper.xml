@@ -3,8 +3,8 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.core.mapper.ViewHistoryMapper">	
 	<!--  查询单条记录  -->  
-    <select id="getByUserId" parameterType="string" resultMap="viewHistoryMap">  
-       SELECT * FROM T_view_history WHERE user_id = #{userId} 
+    <select id="getByUserIdAndVideoId" parameterType="string" resultMap="viewHistoryMap">  
+       SELECT * FROM T_view_history WHERE user_id = #{0} and video_id = #{1} 
     </select>  
     <insert id="add" parameterType="ViewHistory">
     	INSERT INTO `test-mt`.`t_view_history` (`id`, `video_id`, `user_id`, `crt_time`) VALUES (#{id}, #{videoId}, #{userId}, #{crtTime});

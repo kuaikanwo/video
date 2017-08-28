@@ -54,8 +54,7 @@ public class Constant {
 	public static final String HANDLE_SUCCESS = "操作成功";
 	// 操作失败
 	public static final String HANDLE_ERROR = "操作失败";
-	//用户未登录
-	public static final String USER_UN_LOGIN = "用户未登录";
+	
 	
 	//操作成功状态码
 	public static final int SUCCESS_CODE = 2000;

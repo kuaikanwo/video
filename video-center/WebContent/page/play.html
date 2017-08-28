@@ -207,6 +207,10 @@
 </div>
 </body>
 <script src="./js/mui.min.js"></script>
-<script src="./js/mjs/validate.js"></script>
-<script src="./js/mjs/play.js"></script>
+<script type="text/javascript">
+var now=new Date(); 
+var number = now.getYear().toString()+now.getMonth().toString()+now.getDate().toString()+now.getHours().toString()+now.getMinutes().toString()+now.getSeconds().toString();
+document.write('<script language="javascript" type="text/javascript" src="./js/mjs/validate.js?'+number+'"><\/script>');
+document.write('<script language="javascript" type="text/javascript" src="./js/mjs/play.js?'+number+'"><\/script>');
+</script>
 </html>

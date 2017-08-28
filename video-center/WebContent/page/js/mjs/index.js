@@ -15,7 +15,7 @@ mui.ready(function () {
     });
     var _btn = document.querySelector('#login-btn');
     if(mtools.getUserInfo()){
-    	document.querySelector('#species-count').innerHTML = mtools.getUserInfo().goldCount;
+    	mtools.resetGoldCount(mtools.getEl('#species-count'));
     	_btn.innerHTML = '<input type="text" id="name-btn" value="'+mtools.getUserInfo().name+'"/>';
     	_btn.setAttribute('href', 'javascript:void(0);');
     	mtools.getEl('#logoutLi').style.display = 'block';
@@ -24,8 +24,6 @@ mui.ready(function () {
     	_btn.setAttribute('href', 'register.html');
     	mtools.getEl('#logoutLi').style.display = 'none';
     }
-    
-    mtools.resetGoldCount();
 });
 var count = 0;
 
@@ -59,8 +57,9 @@ function pullupRefresh(){
             	            '</div>'+
             	            ' </div>'+
             	            ' <div onclick="alertCount()" class="mui-card-content">'+
-            	            '   <a href="play.html?thumbnailPath='+obj[i].thumbnailPath+'&videoId='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
-            	            '    </div>'+
+            	            '   <a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
+            	            '   <p class="video-title">'+obj[i].title+'</p>'+
+            	            '  </div>'+
             	            '</div>';
             	            table.appendChild(li);
             	        }
@@ -135,5 +134,5 @@ function alertCount() {
 
 function clearLoginInfo(){
 	window.localStorage.userInfo = '';
-	showMenu();
+	window.location.href=window.location.href; 
 }

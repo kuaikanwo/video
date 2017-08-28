@@ -72,7 +72,7 @@
 			trim: function(value){
 				return value.replace(/(^\s*)|(\s*$)/g, "");
 			},
-			resetGoldCount: function(){
+			resetGoldCount: function(obj){
 				//更新金币数量
         		mui.ajax({
         			url: '/userController.do?getGoldCount',
@@ -83,9 +83,14 @@
                 	},
                 	success: function(data){
                 		if(data.status != '1111'){
-                			var user = JSON.parse(window.localStorage.userInfo);
-            				user.goldCount = data.obj;
-            				window.localStorage.userInfo = JSON.stringify(user);
+                			if(window.localStorage.userInfo){
+                				var user = JSON.parse(window.localStorage.userInfo);
+                				user.goldCount = data.obj;
+                				window.localStorage.userInfo = JSON.stringify(user);
+                				if(obj){
+                					obj.innerHTML = data.obj;
+                				}
+                			}
                 		}
                 	},
                 	error: function(data){

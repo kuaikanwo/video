@@ -4,7 +4,7 @@ mui.ready(function () {
 	document.body.style.overflow='hidden';
 	var thumbnailPath = getUrlParam('thumbnailPath');
 	var fileName = getUrlParam('fileName');
-	var videoId = getUrlParam('videoId');
+	var videoId = getUrlParam('id');
 	var videoTitle = getUrlParam('title');
 	var myVideo = document.querySelector('#m-video');
 	
@@ -20,8 +20,11 @@ mui.ready(function () {
 	      }
 
 	}, function(){
+		this.on('loadstart', function(){
+			console.log('loadstart');
+		})
 	    this.on('loadeddata',function(){
-	        console.log(this)
+	        console.log(1231231)
 	    })
 	    this.on('ended',function(){
 	        /* this.pause();
@@ -31,12 +34,9 @@ mui.ready(function () {
 	});
 	
 	if(mtools.isLogin()){
-		player.src('/videoController.do?downloadVideo&videoId=' + videoId + '&userId=' + mtools.getUserId());
-		//player.src('/fileController.do?downloadVideo&fileName=' + fileName);
-		//player.src('/fileController.do?downloadVideo&fileName=4028ea815e2207f9015e2207f9530000.mp4');
+		player.src('/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
 	}
 	changeTitle(videoTitle);
-	
 	initHot();
 });
 
@@ -49,7 +49,9 @@ function shareVideo(){
 
 function changePlay(posterPath, fileName, videoId, title){
 	player.poster('/fileController.do?readThumbnail&fileName=' + posterPath);
-	player.src('/fileController.do?readVideo&fileName=' + fileName);
+	if(mtools.isLogin()){
+		player.src('/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
+	}
 	changeTitle(title);
 	initHot();
 }

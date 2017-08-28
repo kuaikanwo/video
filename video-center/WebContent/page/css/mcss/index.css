@@ -212,3 +212,15 @@ input {
 .search-content>ul>li:last-child:after {
 	height: 0px;
 }
+.video-title{
+	position: absolute;
+    left: 0;
+    bottom: 6px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    color: #ffffff;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}

@@ -102,6 +102,10 @@
 		.mui-input-group .mui-input-row:after{
 			left:0;
 		}
+		.video-title{
+			display: inline-block;
+    		margin-left: 10px;
+		}
     </style>
 </head>
 
@@ -134,13 +138,13 @@
 				</span>
 			<div class="mui-input-row">
 				<label>标题</label>
-				<input type="text" name="title" id="title" placeholder="请输入标题"  class="mui-input-clear">
+				<input type="text" name="title" id="title" placeholder="请输入标题" maxlength="15"  class="mui-input-clear">
 			</div>
 			<div class="mui-input-row" style="height: 170px;text-align: center">
-				<img alt="" src="./images/videoIcon.png" width="50%">
+				<img alt="" src="./images/videoIcon.png" width="40%">
 			</div>
 			<div class="mui-input-row  mui-left" style="line-height: 40px;padding-left: 10px;    height: 150px;">
-				<input name="checkbox" value="Item 2" type="checkbox" checked="">
+				<input name="checkbox" value="Item 2" type="checkbox" checked="checked" disabled="disabled">
 				<label style="font-size: 12px;float: none" >我已阅读并接受上传协议</label>
 				<p style="line-height: 20px;padding-right: 10px;height: 100px; overflow-y: auto;">
 					为响应国家九部委联合开展深入整治互联网和手机媒体淫秽色情及低俗信息专项行动的号召，营造一个健康文明的网络环境，给大家一个和谐积极的家园。
@@ -169,6 +173,11 @@
 <div class="mui-pull-bottom-pocket mui-block mui-visibility"><div class="mui-pull"><div class="mui-pull-loading mui-icon mui-spinner mui-visibility"></div><div class="mui-pull-caption mui-pull-caption-refresh">正在加载...</div></div></div>
 </body>
 <script src="./js/mui.min.js"></script>
-<script src="./js/mjs/validate.js"></script>
-<script src="./js/mjs/my-upload.js"></script>
+<script language="javascript" type="text/javascript"> 
+	//防止js文件缓存下来，以后更新时不再需要用户重新删除IE文件等操作。 
+	var now=new Date(); 
+	var number = now.getYear().toString()+now.getMonth().toString()+now.getDate().toString()+now.getHours().toString()+now.getMinutes().toString()+now.getSeconds().toString(); 
+	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/validate.js?'+number+'"><\/script>'); 
+	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/my-upload.js?'+number+'"><\/script>');
+</script> 
 </html>

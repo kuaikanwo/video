@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.core.common.Constant;
 import com.core.service.UserServiceI;
 import com.core.util.FileUtil;
-import com.core.util.SMSUtil;
 
 @Scope("prototype")
 @Controller
