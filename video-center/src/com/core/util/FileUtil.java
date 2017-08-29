@@ -27,12 +27,12 @@ public class FileUtil {
 		int index = rawFileName.lastIndexOf(".");
 		String suffix = rawFileName.substring(index, rawFileName.length());
 		String fileName = UUIDGenerator.generate() + suffix;
-		File filepath = new File(path, fileName);
-		if (!filepath.getParentFile().exists()) {
-			filepath.getParentFile().mkdirs();
+		File filepath = new File(path);
+		if (!filepath.exists()) {
+			filepath.mkdirs();
 		}
 		try {
-			file.transferTo(new File(filepath.getPath()));
+			file.transferTo(new File(path+fileName));
 		} catch (IllegalStateException e) {
 			logger.error(e.getMessage());
 		} catch (IOException e) {
@@ -75,5 +75,11 @@ public class FileUtil {
 				logger.error(e.getMessage());
 			}
 		}
+	}
+	
+	
+	public static void main(String[] args){
+		File file = new File("f://test/test.txt");
+		System.out.println(file.getPath());
 	}
 }

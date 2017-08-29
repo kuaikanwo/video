@@ -17,7 +17,7 @@
   <select id="getMyCollect">
   	select 
   	<include refid="Base_Column_List" />
-    from t_video_collect
+    from T_VIDEO_COLLECT
     where collect_usr_id = #{crtUserId}  and is_delete = 0
     <if test="title != null">
     	and title like CONCAT('%','#{title}','%' ) 
@@ -31,7 +31,7 @@
   </sql>
   
   <insert id="insert" parameterType="com.transfar.webportal.chp.model.vo.TVideoCollect" >
-    insert into t_video_collect (id, video_id, video_title, 
+    insert into T_VIDEO_COLLECT (id, video_id, video_title, 
       video_thumbnail_path, video_crt_time, video_file_name, 
       video_crt_by_user_id, video_crt_by_user_name, collect_usr_id, 
       is_delete)

@@ -75,7 +75,7 @@
 			resetGoldCount: function(obj){
 				//更新金币数量
         		mui.ajax({
-        			url: '/userController.do?getGoldCount',
+        			url: '/video/userController.do?getGoldCount',
         			type: 'POST',
         			headers:{
                 		'userId': this.getUserId(),

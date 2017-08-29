@@ -10,7 +10,7 @@ mui.ready(function () {
 	
 	player = videojs('example_video_1', {
 	    "autoplay":false,
-	    "poster": '/fileController.do?readThumbnail&fileName=' + getUrlParam('thumbnailPath'),
+	    "poster": '/video/fileController.do?readThumbnail&fileName=' + getUrlParam('thumbnailPath'),
 	    controlBar: {
 	        captionsButton: false,
 	        chaptersButton : false,
@@ -34,7 +34,7 @@ mui.ready(function () {
 	});
 	
 	if(mtools.isLogin()){
-		player.src('/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
+		player.src('/video/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
 	}
 	changeTitle(videoTitle);
 	initHot();
@@ -48,9 +48,9 @@ function shareVideo(){
 }
 
 function changePlay(posterPath, fileName, videoId, title){
-	player.poster('/fileController.do?readThumbnail&fileName=' + posterPath);
+	player.poster('/video/fileController.do?readThumbnail&fileName=' + posterPath);
 	if(mtools.isLogin()){
-		player.src('/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
+		player.src('/video/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
 	}
 	changeTitle(title);
 	initHot();
@@ -59,7 +59,7 @@ function changePlay(posterPath, fileName, videoId, title){
 function initHot(){
 	//加载热门视频
 	mui.ajax({
-		url: '/videoController.do?getHot',
+		url: '/video/videoController.do?getHot',
 		dataType: 'json',
 		success: function(data){
 			if(data && data.obj.length > 0){
@@ -73,7 +73,7 @@ function initHot(){
     	            li.className = 'mui-table-view-cell';
     	            li.innerHTML = '<div   class="mui-card"><a href="javascript:changePlay(\''+obj.thumbnailPath+'\',\''+obj.fileName+'\',\''+obj.id+'\',\''+obj.title+'\');"> '+
     	                '<div class="mui-card-header mui-card-media">'+
-    	            '<img onerror="this.src=\'./resource/404.png\'" src="/fileController.do?readThumbnail&fileName='+obj.thumbnailPath+'">'+
+    	            '<img onerror="this.src=\'./resource/404.png\'" src="/video/fileController.do?readThumbnail&fileName='+obj.thumbnailPath+'">'+
     	            '<div class="mui-media-body">'+
     	            obj.crtUserName+
     	            ' <p>发表于 '+obj.crtTime+'  '+obj.playCount+'次播放</p>'+

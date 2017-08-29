@@ -33,7 +33,7 @@ var count = 0;
 function pullupRefresh(){
     setTimeout(function() {
     	mui.ajax({
-    		url: '/videoController.do?queryAll&pageNo='+count+'&title='+mtools.getEl('.search-input').value,
+    		url: '/video/videoController.do?queryAll&pageNo='+count+'&title='+mtools.getEl('.search-input').value,
         	type: 'POST',
         	processData: false,
         	contentType: false,
@@ -57,7 +57,7 @@ function pullupRefresh(){
             	            '</div>'+
             	            ' </div>'+
             	            ' <div onclick="alertCount()" class="mui-card-content">'+
-            	            '   <a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
+            	            '   <a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="/video/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
             	            '   <p class="video-title">'+obj[i].title+'</p>'+
             	            '  </div>'+
             	            '</div>';
@@ -82,7 +82,7 @@ function getVideoTitle(obj){
 		/*dom.style.display = 'none';*/
 	}else{
 		mui.ajax({
-			url: '/videoController.do?getTitles&title='+obj.value,
+			url: '/video/videoController.do?getTitles&title='+obj.value,
 			dataType: 'json',
 			success: function(data){
 				if(data && data.obj.length > 0){

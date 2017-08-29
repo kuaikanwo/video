@@ -4,10 +4,10 @@
 <mapper namespace="com.core.mapper.ViewHistoryMapper">	
 	<!--  查询单条记录  -->  
     <select id="getByUserIdAndVideoId" parameterType="string" resultMap="viewHistoryMap">  
-       SELECT * FROM T_view_history WHERE user_id = #{0} and video_id = #{1} 
+       SELECT * FROM T_VIEW_HISTORY WHERE user_id = #{0} and video_id = #{1} 
     </select>  
     <insert id="add" parameterType="ViewHistory">
-    	INSERT INTO `test-mt`.`t_view_history` (`id`, `video_id`, `user_id`, `crt_time`) VALUES (#{id}, #{videoId}, #{userId}, #{crtTime});
+    	INSERT INTO `T_VIEW_HISTORY` (`id`, `video_id`, `user_id`, `crt_time`) VALUES (#{id}, #{videoId}, #{userId}, #{crtTime});
     </insert>
     
     <resultMap type="ViewHistory" id="viewHistoryMap">

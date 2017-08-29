@@ -42,7 +42,7 @@
     </select>
     
     <insert id="add" parameterType="Video">
-    	INSERT INTO `t_video` (`id`, `title`, `file_name`, `play_count`,`thumbnail_path`, `crt_by_user_id`,
+    	INSERT INTO `T_VIDEO` (`id`, `title`, `file_name`, `play_count`,`thumbnail_path`, `crt_by_user_id`,
     	 `crt_by_user_name`, `crt_time`, `is_delete`) VALUES (#{id}, #{title}, #{fileName}, 0, #{thumbnailPath}, #{crtUserId}, #{crtUserName}, #{crtTime}, 0);
     </insert>
     

@@ -6,7 +6,7 @@ function sendAuthCode() {
 			changeStyle();
 			codeInter = window.setInterval(changeTip, 1000);
 			mui.ajax({
-				url: '/userController.do?sendAuthCode&phone='+phone,
+				url: '/video/userController.do?sendAuthCode&phone='+phone,
 			    type: 'POST',
 			    success: function(data){
 			    	if(data && data.obj){
@@ -61,7 +61,7 @@ function submitForm(){
 	var code  = document.querySelector('#code').value;
 	if(mtools.validatemobile(phone) && mtools.validateAuthCode(code))
 	mui.ajax({
-		url: '/userController.do?login&phone='+phone+'&code='+code,
+		url: '/video/userController.do?login&phone='+phone+'&code='+code,
 		type: 'POST',
 		success: function(data){
 			if(data && data.status == '2000'){

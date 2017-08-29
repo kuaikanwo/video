@@ -20,7 +20,7 @@ var count = 0;
  */
 function pullupRefresh(){
     setTimeout(function() {
-    	mui.ajax('/videoController.do?queryMyupload&pageNo='+count, {
+    	mui.ajax('/video/videoController.do?queryMyupload&pageNo='+count, {
         	type: 'POST',
         	headers:{
         		'token': mtools.getToken(),
@@ -43,7 +43,7 @@ function pullupRefresh(){
             	            li.className = 'mui-table-view-cell';
             	            li.innerHTML = '<div class="mui-card"><a href="play.html?title='+obj[i].title+'&thumbnailPath='+obj[i].thumbnailPath+'&fileName='+obj[i].fileName+'&id='+obj[i].id+'&last=my-upload.html">'+
             	                '<div class="mui-card-header mui-card-media">'+
-            	            '<img onerror="this.src=\'./resource/404.png\'"  src="/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'">'+
+            	            '<img onerror="this.src=\'./resource/404.png\'"  src="/video/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'">'+
             	            '<div class="mui-media-body">'+
             	           obj[i].crtUserName+ '<span class="video-title">'+obj[i].title+'</span>' +
             	            ' <p>发表于 '+obj[i].crtTime+'   '+obj[i].playCount+'次播放</p>'+
@@ -106,7 +106,7 @@ function uploadVideo(obj){
 		} 
 		var form = document.forms.namedItem("fileinfo");
 		var formData = new FormData(form);
-    	mui.ajax('/videoController.do?upload', {
+    	mui.ajax('/video/videoController.do?upload', {
         	type: 'POST',
         	async: 'true',
         	headers:{
@@ -120,6 +120,7 @@ function uploadVideo(obj){
     		beforeSend: function(data){
     			obj.setAttribute('disabled', 'disabled');
     			mui.toast('上传中');
+    			mtools.getEl('#loading').style.display = 'block';
     		},
         	success: function(data){
         		closeUploadWindow();

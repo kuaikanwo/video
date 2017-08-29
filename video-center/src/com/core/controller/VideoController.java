@@ -119,7 +119,8 @@ public class VideoController {
 	@ResponseBody
 	public AjaxJson queryAll(HttpServletRequest request, String title, Integer pageNo) throws Exception {
 		AjaxJson aj = new AjaxJson();
-		String newTitle = new String(title.getBytes("iso8859-1"), "UTF-8");
+		String newTitle = new String(title.getBytes("UTF-8"), "UTF-8");
+		logger.info(newTitle+"**********************");
 		aj.setObj(queryVideo(null, newTitle, pageNo));
 		return aj;
 	}
@@ -207,14 +208,15 @@ public class VideoController {
 			aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
 		} else {
 			String title = request.getParameter("title");
-			if (file.isEmpty() || StringUtils.isEmpty(title)) {
+			String newTitle = new String(title.getBytes("utf-8"), "utf-8");
+			if (file.isEmpty() || StringUtils.isEmpty(newTitle)) {
 				aj.setMsg(Constant.HANDLE_ERROR);
 			} else {
 				String fileName = FileUtil.write(file, Constant.VIDEO_PATH);
 				String crtUserId = ResourceUtil.getCurrentUserId(request);
 				Video video = new Video();
 				video.setFileName(fileName);
-				video.setTitle(title);
+				video.setTitle(newTitle);
 				video.setCrtUserId(crtUserId);
 				video.setCrtUserName(ResourceUtil.getCurrentUserName(request));
 				video.setThumbnailPath(ThumbnailUtil.generate(fileName));
@@ -321,7 +323,7 @@ public class VideoController {
 		if (StringUtils.isEmpty(title)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
 		} else {
-			String newTitle = new String(title.getBytes("iso8859-1"), "UTF-8");
+			String newTitle = new String(title.getBytes("UTF-8"), "UTF-8");
 			aj.setObj(videoService.getTitles(newTitle));
 		}
 		return aj;
