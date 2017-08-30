@@ -103,6 +103,12 @@ function uploadVideo(obj){
 			mui.alert('请上传MP4格式的视频,谢谢!', '提示', function() {});
 		    return false; 
 		} 
+		
+		
+		obj.setAttribute('disabled', 'disabled');
+		mui.toast('上传中');
+		mtools.getEl('#loading').style.display = 'block';
+		
 		doUpload();
 		/*var form = document.forms.namedItem("fileinfo");
 		var formData = new FormData(form);
@@ -156,7 +162,7 @@ function doUpload(){
 		formData.append("total", shardCount);  //总片数  
 		formData.append("index", i + 1);        //当前是第几片  
 		formData.append("fileid", fileid); 
-		formData.append('title', 'haha'); 
+		formData.append('title', mtools.getEl('#title').value); 
 	    //Ajax提交  
 	    mui.ajax('/video/videoController.do?upload', {
         	type: 'POST',

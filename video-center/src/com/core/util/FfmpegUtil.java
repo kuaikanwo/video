@@ -21,8 +21,7 @@ public class FfmpegUtil {
 							+ Constant.VIDEO_PATH + videoPath + " "
 							+ imageRealPath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info(e.getMessage());
 		}
 		return videoName + ".jpg";
 		//return transfer(videoPath);
@@ -51,7 +50,7 @@ public class FfmpegUtil {
 			while ((line = br.readLine()) != null)
 				System.out.println(line);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.info(t.getMessage());
 			return null;
 		}
 		return videoName + ".jpg";
@@ -69,12 +68,35 @@ public class FfmpegUtil {
 							+ fileName + " "
 							+ tarFileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info(e.getMessage());
+		}
+	}
+	
+	
+	/**
+	 * linux下压缩视频
+	 * @param inFile
+	 * @return
+	 */
+	public static void  compressByLinux(String fileName, String tarFileName) {
+		String command = "ffmpeg -i " + fileName
+				+ " -r 10 -b 32k "
+				+ tarFileName;
+		try {
+			Runtime rt = Runtime.getRuntime();
+			Process proc = rt.exec(command);
+			InputStream stderr = proc.getErrorStream();
+			InputStreamReader isr = new InputStreamReader(stderr);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			while ((line = br.readLine()) != null)
+				System.out.println(line);
+		} catch (Throwable t) {
+			logger.info(t.getMessage());
 		}
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(System.getProperty("os.name"));		
+		compress("C:\\Users\\WP\\Desktop\\tmp\\de2edd30bc97d946144fc6d01b4ddb57.mp4", "F:\\videos\\a1.mp4");
 	}
 }
