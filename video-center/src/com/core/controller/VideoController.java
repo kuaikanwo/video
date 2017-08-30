@@ -34,17 +34,18 @@ import com.core.service.VideoCollectServiceI;
 import com.core.service.VideoServiceI;
 import com.core.service.ViewHistoryServiceI;
 import com.core.util.CheckUtil;
+import com.core.util.FfmpegUtil;
 import com.core.util.FileUtil;
 import com.core.util.ResourceUtil;
-import com.core.util.ThumbnailUtil;
 
 @Scope("prototype")
 @Controller
 @RequestMapping("/videoController")
 public class VideoController {
-	
-	private static final Logger logger = Logger.getLogger(VideoController.class);
-	
+
+	private static final Logger logger = Logger
+			.getLogger(VideoController.class);
+
 	@Autowired
 	private UserServiceI UserService;
 	@Autowired
@@ -53,7 +54,7 @@ public class VideoController {
 	private VideoCollectServiceI videoCollectService;
 	@Autowired
 	private ViewHistoryServiceI viewHistoryService;
-	
+
 	/**
 	 * 删除我上传的视频
 	 * 
@@ -64,7 +65,8 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "delVideo", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxJson delVideo(HttpServletRequest request, String id) throws Exception {
+	public AjaxJson delVideo(HttpServletRequest request, String id)
+			throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (StringUtils.isEmpty(id)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
@@ -91,7 +93,8 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "queryMyupload")
 	@ResponseBody
-	public AjaxJson queryMyupload(HttpServletRequest request, String title, Integer pageNo) throws Exception {
+	public AjaxJson queryMyupload(HttpServletRequest request, String title,
+			Integer pageNo) throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (CheckUtil.isUnLogin(request)) {
 			aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
@@ -100,7 +103,8 @@ public class VideoController {
 			if (StringUtils.isEmpty(title))
 				title = "";
 			String newTitle = new String(title.getBytes("iso8859-1"), "UTF-8");
-			aj.setObj(queryVideo(ResourceUtil.getCurrentUserId(request), newTitle, pageNo));
+			aj.setObj(queryVideo(ResourceUtil.getCurrentUserId(request),
+					newTitle, pageNo));
 		}
 
 		return aj;
@@ -117,79 +121,87 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "queryAll")
 	@ResponseBody
-	public AjaxJson queryAll(HttpServletRequest request, String title, Integer pageNo) throws Exception {
+	public AjaxJson queryAll(HttpServletRequest request, String title,
+			Integer pageNo) throws Exception {
 		AjaxJson aj = new AjaxJson();
 		String newTitle = new String(title.getBytes("UTF-8"), "UTF-8");
-		logger.info(newTitle+"**********************");
+		logger.info(newTitle + "**********************");
 		aj.setObj(queryVideo(null, newTitle, pageNo));
 		return aj;
 	}
 
 	@RequestMapping(params = "downloadVideo")
-	public void downloadVideo(String id, String userId, HttpServletResponse response, HttpServletRequest request) {
+	public void downloadVideo(String id, String userId,
+			HttpServletResponse response, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
-		
-		//验证是否登录
+
+		// 验证是否登录
 		if (StringUtils.isEmpty(id) || StringUtils.isEmpty(userId)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
 		} else {
-			//观看次数加1
+			// 观看次数加1
 			videoService.increasePlayCount(id);
-			
-			//之前是否观看过
-			ViewHistory vhis = viewHistoryService.getByUserIdAndVideoId(userId, id);
+
+			// 之前是否观看过
+			ViewHistory vhis = viewHistoryService.getByUserIdAndVideoId(userId,
+					id);
 			Video video = videoService.getById(id);
 			String path = null;
-			if(vhis == null) {
-				//之前没有观看过，再校验观看者是不是视频创建者
-				if(!video.getCrtUserId().equals(userId)){
-					//如果不是创建者，判断金币是否足够
+			if (vhis == null) {
+				// 之前没有观看过，再校验观看者是不是视频创建者
+				if (!video.getCrtUserId().equals(userId)) {
+					// 如果不是创建者，判断金币是否足够
 					Integer goldCount = UserService.getGoldCount(userId);
-					if (goldCount >= 10){
-						UserService.updateGoldCount(Constant.VIEW_VIDEO_PROPORTION_GOLD, userId);
-						path = Constant.VIDEO_PATH+video.getFileName();
+					if (goldCount != null && goldCount >= 10) {
+						UserService.updateGoldCount(
+								Constant.VIEW_VIDEO_PROPORTION_GOLD, userId);
+						path = Constant.VIDEO_PATH + video.getFileName();
+					} else {
+						// 返回提示用户金币不足的视频
+						path = Constant.VIDEO_PATH + "notice.mp4";
 					}
-					else{
-						//返回提示用户金币不足的视频
-						path = Constant.VIDEO_PATH+"notice.mp4";
-					}
-				}else{
-					path = Constant.VIDEO_PATH+video.getFileName();
+				} else {
+					path = Constant.VIDEO_PATH + video.getFileName();
 				}
-				//保存一条观看记录到数据库
+				// 保存一条观看记录到数据库
 				ViewHistory nhis = new ViewHistory();
-				
+
 				nhis.setVideoId(id);
 				nhis.setUserId(userId);
 				viewHistoryService.add(nhis);
-			}else{
-				path = Constant.VIDEO_PATH+video.getFileName();
+			} else {
+				path = Constant.VIDEO_PATH + video.getFileName();
 			}
 			try {
-	            // path是指欲下载的文件的路径。
-	            File file = new File(path);
-	            // 以流的形式下载文件。
-	            InputStream fis = new BufferedInputStream(new FileInputStream(path));
-	            byte[] buffer = new byte[fis.available()];
-	            fis.read(buffer);
-	            fis.close();
-	            // 清空response
-	            response.reset();
-	            // 设置response的Header
-	          /*  response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));*/
-	            response.addHeader("Content-Length", "" + file.length());
-	            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-	            response.setContentType("video/mp4");
-	            response.setHeader("Access-Control-Allow-Origin", "*");
-	            response.setHeader("Cache-Control", "max-age=31536000");
-	            toClient.write(buffer);
-	            toClient.flush();
-	            toClient.close();
-	        } catch (IOException ex) {
-	        	logger.info(ex.getMessage());
-	        }
+				// path是指欲下载的文件的路径。
+				File file = new File(path);
+				// 以流的形式下载文件。
+				InputStream fis = new BufferedInputStream(new FileInputStream(
+						path));
+				byte[] buffer = new byte[fis.available()];
+				fis.read(buffer);
+				fis.close();
+				// 清空response
+				response.reset();
+				// 设置response的Header
+				/*
+				 * response.addHeader("Content-Disposition",
+				 * "attachment;filename=" + new String(filename.getBytes()));
+				 */
+				response.addHeader("Content-Length", "" + file.length());
+				OutputStream toClient = new BufferedOutputStream(
+						response.getOutputStream());
+				response.setContentType("video/mp4");
+				response.setHeader("Access-Control-Allow-Origin", "*");
+				response.setHeader("Cache-Control", "max-age=31536000");
+				toClient.write(buffer);
+				toClient.flush();
+				toClient.close();
+			} catch (IOException ex) {
+				logger.info(ex.getMessage());
+			}
 		}
-    }
+	}
 
 	/**
 	 * 上传视频
@@ -202,31 +214,72 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "upload", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxJson upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws Exception {
+	public AjaxJson upload(HttpServletRequest request,
+			@RequestParam("file") MultipartFile file) throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (CheckUtil.isUnLogin(request)) {
 			aj.setStatus(Constant.ERROR_CODE_USER_UN_LOGIN);
 		} else {
 			String title = request.getParameter("title");
+			String total = request.getParameter("total");
+			String index = request.getParameter("index");
+			String fileId = request.getParameter("fileid");
+			String name = request.getParameter("name");
 			String newTitle = new String(title.getBytes("utf-8"), "utf-8");
 			if (file.isEmpty() || StringUtils.isEmpty(newTitle)) {
 				aj.setMsg(Constant.HANDLE_ERROR);
 			} else {
-				String fileName = FileUtil.write(file, Constant.VIDEO_PATH);
-				String crtUserId = ResourceUtil.getCurrentUserId(request);
-				Video video = new Video();
-				video.setFileName(fileName);
-				video.setTitle(newTitle);
-				video.setCrtUserId(crtUserId);
-				video.setCrtUserName(ResourceUtil.getCurrentUserName(request));
-				video.setThumbnailPath(ThumbnailUtil.generate(fileName));
-				videoService.add(video);
 
-				// 上传者金币加10
-				UserService.updateGoldCount(Constant.UPLOAD_VIDEO_PROPORTION_GOLD, crtUserId);
+				File filePath = new File(Constant.VIDEO_PATH + File.separator
+						+ fileId);
+				if (!filePath.exists())
+					filePath.mkdirs();
 
-				aj.setMsg(Constant.HANDLE_SUCCESS);
+				FileUtil.write(file, filePath.getPath(), index, name);
+
+				// 如果当前文件是此次分片中的最后一个
+
+				String videoPath = Constant.VIDEO_PATH + File.separator
+						+ fileId;
+				// 检验文件是否真是存在于服务器
+				File tarPath = new File(videoPath);
+
+				if (tarPath.listFiles().length == Integer.parseInt(total)) {
+					String suffix = FileUtil.getSuffix(name);
+
+					// 合并
+					FileUtil.mergeFiles(videoPath + suffix, videoPath);
+					
+					// 压缩后的文件名
+					String cpFileName = videoPath + "cp" + suffix;
+					FfmpegUtil.compress(videoPath + suffix, cpFileName);
+
+					// 压缩合并完成之后删除分片文件和未压缩的文件
+					FileUtil.deleteDir(new File(videoPath));
+					//new File(videoPath + suffix).delete();
+					
+					
+					// 保存数据到数据库
+					String crtUserId = ResourceUtil.getCurrentUserId(request);
+					Video video = new Video();
+					video.setFileName(fileId + suffix);
+					video.setTitle(newTitle);
+					video.setCrtUserId(crtUserId);
+					video.setCrtUserName(ResourceUtil
+							.getCurrentUserName(request));
+					video.setThumbnailPath(FfmpegUtil.generate(fileId + suffix));
+					videoService.add(video);
+
+					// 上传者金币加10
+					UserService.updateGoldCount(
+							Constant.UPLOAD_VIDEO_PROPORTION_GOLD, crtUserId);
+
+					// 上传完毕，返回成功标识
+					aj.setStatus(Constant.SUCCESS_CODE);
+
+				}
 			}
+			aj.setMsg(Constant.HANDLE_SUCCESS);
 		}
 		return aj;
 	}
@@ -241,7 +294,8 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "collect", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxJson collect(HttpServletRequest request, String id) throws Exception {
+	public AjaxJson collect(HttpServletRequest request, String id)
+			throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (StringUtils.isEmpty(id)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
@@ -269,7 +323,8 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "delCollect", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxJson delCollect(HttpServletRequest request, String collectId) throws Exception {
+	public AjaxJson delCollect(HttpServletRequest request, String collectId)
+			throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (StringUtils.isEmpty(collectId)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
@@ -318,7 +373,8 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "getTitles")
 	@ResponseBody
-	public AjaxJson getTitles(String title, HttpServletRequest request) throws Exception {
+	public AjaxJson getTitles(String title, HttpServletRequest request)
+			throws Exception {
 		AjaxJson aj = new AjaxJson();
 		if (StringUtils.isEmpty(title)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);

@@ -1,6 +1,7 @@
 package com.core.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -8,10 +9,10 @@ import org.apache.log4j.Logger;
 
 import com.core.common.Constant;
 
-public class ThumbnailUtil {
-	private static final Logger logger = Logger.getLogger(ThumbnailUtil.class);
+public class FfmpegUtil {
+	private static final Logger logger = Logger.getLogger(FfmpegUtil.class);
 	public static String generate(String videoPath) {
-		/*int index = videoPath.lastIndexOf(".");
+		int index = videoPath.lastIndexOf(".");
 		String videoName = videoPath.substring(0, index);
 		String imageRealPath = Constant.THUMBNAIL_PATH + videoName + ".jpg";
 		try {
@@ -23,13 +24,15 @@ public class ThumbnailUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return videoName + ".jpg";*/
-		return transfer(videoPath);
+		return videoName + ".jpg";
+		//return transfer(videoPath);
 	}
 
-	// 视频缩略图截取
-	// inFile 输入文件(包括完整路径)
-	// outFile 输出文件(可包括完整路径)
+	/**
+	 * linux下的缩略图生成
+	 * @param inFile
+	 * @return
+	 */
 	public static String transfer(String inFile) {
 		int index = inFile.lastIndexOf(".");
 		String videoName = inFile.substring(0, index);
@@ -54,7 +57,24 @@ public class ThumbnailUtil {
 		return videoName + ".jpg";
 	}
 
+	/**
+	 * 压缩视频
+	 * @param fileName
+	 * @param tarFileName
+	 */
+	public static void compress(String fileName, String tarFileName){
+		try {
+			Runtime.getRuntime().exec(
+					"cmd /c start E://ffmpeg//compress.bat "
+							+ fileName + " "
+							+ tarFileName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
-		System.out.println(generate("402881bb5e277e32015e277e328c0000.mp4"));
+		System.out.println(System.getProperty("os.name"));		
 	}
 }

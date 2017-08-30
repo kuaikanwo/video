@@ -38,7 +38,6 @@ function pullupRefresh(){
             	        var cells = mtools.getEl('.mui-table-view-cell');
 
             	        for (var i = 0; i < obj.length; i++) {
-            	        	console.log(obj[i].thumbnailPath);
             	            var li = document.createElement('li');
             	            li.className = 'mui-table-view-cell';
             	            li.innerHTML = '<div class="mui-card"><a href="play.html?title='+obj[i].title+'&thumbnailPath='+obj[i].thumbnailPath+'&fileName='+obj[i].fileName+'&id='+obj[i].id+'&last=my-upload.html">'+
@@ -104,7 +103,8 @@ function uploadVideo(obj){
 			mui.alert('请上传MP4格式的视频,谢谢!', '提示', function() {});
 		    return false; 
 		} 
-		var form = document.forms.namedItem("fileinfo");
+		doUpload();
+		/*var form = document.forms.namedItem("fileinfo");
 		var formData = new FormData(form);
     	mui.ajax('/video/videoController.do?upload', {
         	type: 'POST',
@@ -130,9 +130,66 @@ function uploadVideo(obj){
         	error: function(data){
         		mui.toast('系统异常，请稍后重试！');
         	}
-        });
+        });*/
 	}
 }
+
+function doUpload(){
+	var file = _file,  //文件对象  
+    name = file.name,        //文件名  
+    size = file.size,        //总大小  
+    succeed = 0,
+    fileid = guidGenerator();  
+        
+	var shardSize = 2 * 1024 * 1024,    //以4MB为一个分片  
+	    shardCount = Math.ceil(size / shardSize);  //总片数  
+	        
+	for(var i = 0;i < shardCount;++i){  
+	    //计算每一片的起始与结束位置  
+	    var start = i * shardSize,  
+	        end = Math.min(size, start + shardSize);  
+	    //构造一个表单，FormData是HTML5新增的  
+	  //  var form = document.forms.namedItem("fileinfo");
+		var formData = new FormData()
+		formData.append("file", file.slice(start,end));  //slice方法用于切出文件的一部分  
+		formData.append("name", name);  
+		formData.append("total", shardCount);  //总片数  
+		formData.append("index", i + 1);        //当前是第几片  
+		formData.append("fileid", fileid); 
+		formData.append('title', 'haha'); 
+	    //Ajax提交  
+	    mui.ajax('/video/videoController.do?upload', {
+        	type: 'POST',
+        	async: 'true',
+        	headers:{
+        		'token': mtools.getToken(),
+        		'userId': mtools.getUserId(),
+        		'userName': mtools.getUserName()
+        	},
+        	data:formData,
+        	processData: false,
+        	contentType: false,
+        	success: function(data){
+        		if(data.status == '2000'){
+        			closeUploadWindow();
+            		mtools.resetGoldCount();
+            		window.location.reload();
+        		}
+        	},
+        	error: function(data){
+        		mui.toast('系统异常，请稍后重试！');
+        	}
+        });
+	} 
+}
+
+//生成唯一的UUID
+function guidGenerator() {
+    var S4 = function() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    };
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+ }
 function closeUploadWindow() {
 	mtools.getEl('.upload-window').style.display = 'none';
 }

@@ -17,11 +17,18 @@ public class Constant {
 	
 	//分页的条数
 	public static final Integer PAGESIZE = 20;
-	// 视频上传路径
+	
+	
+	public static final String VIDEO_PATH = "F:\\videos\\";
+	// 缩略图保存路径
+	public static final String THUMBNAIL_PATH = "F:\\videos\\thumbnail\\";
+	
+	
+	/*// 视频上传路径
 	public static final String VIDEO_PATH = "/usr/videodata/video/";
 	// 缩略图保存路径
 	public static final String THUMBNAIL_PATH = "/usr/videodata/thumbnail/";
-
+*/
 	// 文件不存在返回的默认图标
 	public static final String DEFAULT_FILE_ICON = "/usr/videodata/thumbnail/402881bb5e093204015e093204e20000.jpg";
 
