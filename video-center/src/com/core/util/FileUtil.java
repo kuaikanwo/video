@@ -65,7 +65,8 @@ public class FileUtil {
 		}
 		try {
 			String suffix = getSuffix(originalFilename);
-			file.transferTo(new File(path + File.separator + fileName + suffix));
+			logger.info(path + File.separator + fileName + suffix + "***************************************");
+			file.transferTo(new File(path + "/" + fileName + suffix));
 		} catch (IllegalStateException e) {
 			logger.error(e.getMessage());
 		} catch (IOException e) {

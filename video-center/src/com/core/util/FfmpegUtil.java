@@ -12,7 +12,7 @@ import com.core.common.Constant;
 public class FfmpegUtil {
 	private static final Logger logger = Logger.getLogger(FfmpegUtil.class);
 	public static String generate(String videoPath) {
-		int index = videoPath.lastIndexOf(".");
+		/*int index = videoPath.lastIndexOf(".");
 		String videoName = videoPath.substring(0, index);
 		String imageRealPath = Constant.THUMBNAIL_PATH + videoName + ".jpg";
 		try {
@@ -23,8 +23,8 @@ public class FfmpegUtil {
 		} catch (IOException e) {
 			logger.info(e.getMessage());
 		}
-		return videoName + ".jpg";
-		//return transfer(videoPath);
+		return videoName + ".jpg";*/
+		return transfer(videoPath);
 	}
 
 	/**

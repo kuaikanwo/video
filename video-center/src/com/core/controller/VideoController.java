@@ -230,17 +230,15 @@ public class VideoController {
 				aj.setMsg(Constant.HANDLE_ERROR);
 			} else {
 
-				File filePath = new File(Constant.VIDEO_PATH + File.separator
-						+ fileId);
+				File filePath = new File(Constant.VIDEO_PATH + fileId);
 				if (!filePath.exists())
 					filePath.mkdirs();
-
+				logger.info(filePath.getPath() + "***********" + index + "**************" + name + "*********************************************");
 				FileUtil.write(file, filePath.getPath(), index, name);
 
 				// 如果当前文件是此次分片中的最后一个
 
-				String videoPath = Constant.VIDEO_PATH + File.separator
-						+ fileId;
+				String videoPath = Constant.VIDEO_PATH + fileId;
 				// 检验文件是否真是存在于服务器
 				File tarPath = new File(videoPath);
 
@@ -252,7 +250,7 @@ public class VideoController {
 					
 					// 压缩后的文件名
 					String cpFileName = videoPath + "cp" + suffix;
-					FfmpegUtil.compress(videoPath + suffix, cpFileName);
+					FfmpegUtil.compressByLinux(videoPath + suffix, cpFileName);
 
 					// 压缩合并完成之后删除分片文件和未压缩的文件
 					FileUtil.deleteDir(new File(videoPath));
@@ -267,7 +265,7 @@ public class VideoController {
 					video.setCrtUserId(crtUserId);
 					video.setCrtUserName(ResourceUtil
 							.getCurrentUserName(request));
-					video.setThumbnailPath(FfmpegUtil.generate(fileId + suffix));
+					/*video.setThumbnailPath(FfmpegUtil.generate(fileId + suffix));*/
 					videoService.add(video);
 
 					// 上传者金币加10
