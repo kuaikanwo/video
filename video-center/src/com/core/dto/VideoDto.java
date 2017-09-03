@@ -4,7 +4,7 @@ public class VideoDto extends PageInfoDto{
 	private String title;
 	private Integer isDelete;
 	private String crtUserId;
-	
+	private String srotBy;
 	public String getCrtUserId() {
 		return crtUserId;
 	}
@@ -27,5 +27,13 @@ public class VideoDto extends PageInfoDto{
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getSrotBy() {
+		return srotBy;
+	}
+
+	public void setSrotBy(String srotBy) {
+		this.srotBy = srotBy;
 	}
 }

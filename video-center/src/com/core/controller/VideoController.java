@@ -104,7 +104,7 @@ public class VideoController {
 				title = "";
 			String newTitle = new String(title.getBytes("iso8859-1"), "UTF-8");
 			aj.setObj(queryVideo(ResourceUtil.getCurrentUserId(request),
-					newTitle, pageNo));
+					newTitle, pageNo, ""));
 		}
 
 		return aj;
@@ -121,18 +121,17 @@ public class VideoController {
 	 */
 	@RequestMapping(params = "queryAll")
 	@ResponseBody
-	public AjaxJson queryAll(HttpServletRequest request, String title,
+	public AjaxJson queryAll(HttpServletRequest request, String title, String sortBy,
 			Integer pageNo) throws Exception {
 		AjaxJson aj = new AjaxJson();
 		String newTitle = new String(title.getBytes("UTF-8"), "UTF-8");
-		logger.info(newTitle + "**********************");
-		aj.setObj(queryVideo(null, newTitle, pageNo));
+		aj.setObj(queryVideo(null, newTitle, pageNo, sortBy));
 		return aj;
 	}
 
 	@RequestMapping(params = "downloadVideo")
 	@ResponseBody
-	public AjaxJson downloadVideo(String id, String userId,
+	public AjaxJson downloadVideo(String id, String userId, String isFree,
 			HttpServletResponse response, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 
@@ -148,17 +147,20 @@ public class VideoController {
 			//之前没有观看过
 			if (vhis == null) {
 				
-				//如果是视频创建者，不扣金币
-				if (video.getCrtUserId().equals(userId)) {
-				} else {
-					Integer goldCount = UserService.getGoldCount(userId);
-					if (goldCount != null && goldCount >= 10) {
-						UserService.updateGoldCount(
-								Constant.VIEW_VIDEO_PROPORTION_GOLD, userId);
+				//如果是免注册观看
+				if(!"YES".equals(isFree)) {
+					//如果是视频创建者，不扣金币
+					if (video.getCrtUserId().equals(userId)) {
 					} else {
-						//返回
-						aj.setStatus(Constant.NO_GOLD);
-						return aj;
+						Integer goldCount = UserService.getGoldCount(userId);
+						if (goldCount != null && goldCount >= 10) {
+							UserService.updateGoldCount(
+									Constant.VIEW_VIDEO_PROPORTION_GOLD, userId);
+						} else {
+							//返回
+							aj.setStatus(Constant.NO_GOLD);
+							return aj;
+						}
 					}
 				}
 				aj.setObj(video.getFileName());
@@ -323,13 +325,14 @@ public class VideoController {
 		return aj;
 	}
 
-	public List<Video> queryVideo(String userId, String title, Integer pageNo) {
+	public List<Video> queryVideo(String userId, String title, Integer pageNo, String srotBy) {
 		VideoDto vd = new VideoDto();
 		vd.setCrtUserId(userId);
 		vd.setTitle(title);
 		vd.setIndex(pageNo);
 		vd.setPageSize(Constant.PAGESIZE);
 		vd.setIsDelete(Constant.UN_DELETE);
+		vd.setSrotBy(srotBy);
 		return videoService.queryAllVideo(vd);
 	}
 

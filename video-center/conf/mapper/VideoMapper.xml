@@ -38,7 +38,20 @@
     	<if test="crtUserId != null">
     		AND CRT_BY_USER_ID = #{crtUserId}
     	</if>
-    	AND IS_DELETE = #{isDelete} ORDER BY PLAY_COUNT DESC,CRT_TIME DESC limit #{index}, #{pageSize}
+    	AND IS_DELETE = #{isDelete} ORDER BY 
+    	<choose>
+	        <when test="srotBy == 'hot'">
+		        PLAY_COUNT DESC
+		    </when>
+		     <when test="srotBy == 'new'">
+		        CRT_TIME DESC
+		    </when>
+	    	<otherwise>
+	        	PLAY_COUNT DESC,CRT_TIME DESC
+	    	</otherwise>
+	    </choose>
+    	 
+    	limit #{index}, #{pageSize}
     </select>
     
     <insert id="add" parameterType="Video">
