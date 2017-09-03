@@ -127,4 +127,19 @@ public class UserController {
         }
 		return j;
 	}
+	
+	
+	/**
+	 * 发送验证码
+	 * @param user
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(params = "queryAllUser")
+	@ResponseBody
+	public AjaxJson queryAllUser(HttpServletRequest req) {
+		AjaxJson j = new AjaxJson();
+        j.setObj(userService.queryAllUser());
+		return j;
+	}
 }

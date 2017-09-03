@@ -131,7 +131,8 @@ public class VideoController {
 	}
 
 	@RequestMapping(params = "downloadVideo")
-	public void downloadVideo(String id, String userId,
+	@ResponseBody
+	public AjaxJson downloadVideo(String id, String userId,
 			HttpServletResponse response, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 
@@ -139,68 +140,43 @@ public class VideoController {
 		if (StringUtils.isEmpty(id) || StringUtils.isEmpty(userId)) {
 			aj.setMsg(Constant.DATA_NOT_EMPTY);
 		} else {
-			// 观看次数加1
-			videoService.increasePlayCount(id);
-
 			// 之前是否观看过
 			ViewHistory vhis = viewHistoryService.getByUserIdAndVideoId(userId,
 					id);
 			Video video = videoService.getById(id);
-			String path = null;
+			
+			//之前没有观看过
 			if (vhis == null) {
-				// 之前没有观看过，再校验观看者是不是视频创建者
-				if (!video.getCrtUserId().equals(userId)) {
-					// 如果不是创建者，判断金币是否足够
+				
+				//如果是视频创建者，不扣金币
+				if (video.getCrtUserId().equals(userId)) {
+				} else {
 					Integer goldCount = UserService.getGoldCount(userId);
 					if (goldCount != null && goldCount >= 10) {
 						UserService.updateGoldCount(
 								Constant.VIEW_VIDEO_PROPORTION_GOLD, userId);
-						path = Constant.VIDEO_PATH + video.getFileName();
 					} else {
-						// 返回提示用户金币不足的视频
-						path = Constant.VIDEO_PATH + "notice.mp4";
+						//返回
+						aj.setStatus(Constant.NO_GOLD);
+						return aj;
 					}
-				} else {
-					path = Constant.VIDEO_PATH + video.getFileName();
 				}
+				aj.setObj(video.getFileName());
+				playHelper(id, userId);
+				
 				// 保存一条观看记录到数据库
 				ViewHistory nhis = new ViewHistory();
-
 				nhis.setVideoId(id);
 				nhis.setUserId(userId);
 				viewHistoryService.add(nhis);
+				
+				
 			} else {
-				path = Constant.VIDEO_PATH + video.getFileName();
-			}
-			try {
-				// path是指欲下载的文件的路径。
-				File file = new File(path);
-				// 以流的形式下载文件。
-				InputStream fis = new BufferedInputStream(new FileInputStream(
-						path));
-				byte[] buffer = new byte[fis.available()];
-				fis.read(buffer);
-				fis.close();
-				// 清空response
-				response.reset();
-				// 设置response的Header
-				/*
-				 * response.addHeader("Content-Disposition",
-				 * "attachment;filename=" + new String(filename.getBytes()));
-				 */
-				response.addHeader("Content-Length", "" + file.length());
-				OutputStream toClient = new BufferedOutputStream(
-						response.getOutputStream());
-				response.setContentType("video/mp4");
-				response.setHeader("Access-Control-Allow-Origin", "*");
-				response.setHeader("Cache-Control", "max-age=31536000");
-				toClient.write(buffer);
-				toClient.flush();
-				toClient.close();
-			} catch (IOException ex) {
-				logger.info(ex.getMessage());
+				aj.setObj(video.getFileName());
+				playHelper(id, userId);
 			}
 		}
+		return aj;
 	}
 
 	/**
@@ -233,7 +209,6 @@ public class VideoController {
 				File filePath = new File(Constant.VIDEO_PATH + fileId);
 				if (!filePath.exists())
 					filePath.mkdirs();
-				logger.info(filePath.getPath() + "***********" + index + "**************" + name + "*********************************************");
 				FileUtil.write(file, filePath.getPath(), index, name);
 
 				// 如果当前文件是此次分片中的最后一个
@@ -244,14 +219,25 @@ public class VideoController {
 
 				if (tarPath.listFiles().length == Integer.parseInt(total)) {
 					String suffix = FileUtil.getSuffix(name);
-
-					// 合并
-					FileUtil.mergeFiles(videoPath + suffix, videoPath);
+					String dbFileName = null;//要保存到数据库的文件名
+					/*//只有大于10兆的文件才压缩
+					if(Integer.parseInt(total) > 5) {
+						dbFileName = fileId + "cp"+ suffix;
+						//为了便于以后删除大文件，在文件名上做标记
+						// 合并
+						FileUtil.mergeFiles(videoPath + "BIG" + suffix, videoPath);
+						
+						// 压缩后的文件名
+						FfmpegUtil.compressByLinux(videoPath + "BIG" + suffix, videoPath + "cp" + suffix);
+					}else {
+						//只合并不压缩
+						dbFileName = fileId + suffix;
+						FileUtil.mergeFiles(videoPath + suffix, videoPath);
+					}*/
 					
-					// 压缩后的文件名
-					String cpFileName = videoPath + "cp" + suffix;
-					FfmpegUtil.compressByLinux(videoPath + suffix, cpFileName);
-
+					//只合并不压缩
+					dbFileName = fileId + suffix;
+					FileUtil.mergeFiles(videoPath + suffix, videoPath);
 					// 压缩合并完成之后删除分片文件和未压缩的文件
 					FileUtil.deleteDir(new File(videoPath));
 					//new File(videoPath + suffix).delete();
@@ -260,12 +246,12 @@ public class VideoController {
 					// 保存数据到数据库
 					String crtUserId = ResourceUtil.getCurrentUserId(request);
 					Video video = new Video();
-					video.setFileName(fileId + suffix);
+					video.setFileName(dbFileName);
 					video.setTitle(newTitle);
 					video.setCrtUserId(crtUserId);
 					video.setCrtUserName(ResourceUtil
 							.getCurrentUserName(request));
-					/*video.setThumbnailPath(FfmpegUtil.generate(fileId + suffix));*/
+					video.setThumbnailPath(FfmpegUtil.generate(fileId + suffix));
 					videoService.add(video);
 
 					// 上传者金币加10
@@ -381,5 +367,10 @@ public class VideoController {
 			aj.setObj(videoService.getTitles(newTitle));
 		}
 		return aj;
+	}
+	
+	public void playHelper(String id, String userId) {
+		// 观看次数加1
+		videoService.increasePlayCount(id);
 	}
 }

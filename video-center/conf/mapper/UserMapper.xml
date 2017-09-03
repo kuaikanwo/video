@@ -18,9 +18,18 @@
     <select id="getUserByPhone" parameterType="string" resultType="User">  
        SELECT * FROM T_USER WHERE PHONE = #{phone}  AND IS_DELETE = 0 
     </select>  
+    
+    <select id="queryAllUser"  resultMap="userMap">  
+       SELECT * FROM T_USER WHERE IS_DELETE = 0 
+    </select>  
+    
+    
     <insert id="addUser" parameterType="User">
     	INSERT INTO `T_USER` (`ID`, `PHONE`, `name`, `GOLD_COUNT`, `IS_DELETE`) VALUES (#{id}, #{phone},#{name}, #{goldCount}, 0);
     </insert>
+    
+    
+    
     
     <resultMap type="User" id="userMap">
     	<id column="id" property="id"/>

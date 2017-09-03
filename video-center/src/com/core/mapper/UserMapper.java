@@ -13,6 +13,8 @@ public interface UserMapper {
 	
 	public List<User> getUserByPhone(String phone);
 	
+	public List<User> queryAllUser();
+	
 	public void addUser(User user);
 	
 	void updateGoldCount(Integer count, String id);

@@ -82,4 +82,9 @@ public class UserServiceImp implements UserServiceI{
 	public Integer getGoldCount(String id) {
 		return userMapper.getGoldCount(id);
 	}
+
+	@Override
+	public List<User> queryAllUser() {
+		return userMapper.queryAllUser();
+	}
 }

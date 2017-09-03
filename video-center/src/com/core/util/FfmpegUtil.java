@@ -1,6 +1,7 @@
 package com.core.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,12 +36,13 @@ public class FfmpegUtil {
 	public static String transfer(String inFile) {
 		int index = inFile.lastIndexOf(".");
 		String videoName = inFile.substring(0, index);
-		String outFile = Constant.THUMBNAIL_PATH + videoName + ".jpg";
+		String outFile = "/usr/local/video/static/thumbnail/" + videoName + ".jpg";
 		String command = "ffmpeg -i " + Constant.VIDEO_PATH+inFile
 				+ " -y -f image2 -ss 00:00:1 -t 00:00:01 -s 176x144 "
 				+ outFile;
 		
 		try {
+			logger.info(outFile+"缩略图路径**************************************");
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command);
 			InputStream stderr = proc.getErrorStream();
@@ -80,7 +82,7 @@ public class FfmpegUtil {
 	 */
 	public static void  compressByLinux(String fileName, String tarFileName) {
 		String command = "ffmpeg -i " + fileName
-				+ " -r 10 -b 32k "
+				+ " -vcodec libx264 -r 10 -b 32k "
 				+ tarFileName;
 		try {
 			Runtime rt = Runtime.getRuntime();
@@ -97,6 +99,10 @@ public class FfmpegUtil {
 	}
 	
 	public static void main(String[] args) {
-		compress("C:\\Users\\WP\\Desktop\\tmp\\de2edd30bc97d946144fc6d01b4ddb57.mp4", "F:\\videos\\a1.mp4");
+		//compress("C:\\Users\\WP\\Desktop\\tmp\\de2edd30bc97d946144fc6d01b4ddb57.mp4", "F:\\videos\\a1.mp4");
+		
+		File file = new File("C:\\Users\\mengtao\\Desktop\\tmp\\59aa316fd66a9_wpd.mp4");
+		System.out.println(file.length()/1024/1024);
+		
 	}
 }

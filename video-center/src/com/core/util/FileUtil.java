@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -65,7 +66,6 @@ public class FileUtil {
 		}
 		try {
 			String suffix = getSuffix(originalFilename);
-			logger.info(path + File.separator + fileName + suffix + "***************************************");
 			file.transferTo(new File(path + "/" + fileName + suffix));
 		} catch (IllegalStateException e) {
 			logger.error(e.getMessage());
@@ -116,6 +116,7 @@ public class FileUtil {
 	 * @param outFile
 	 * @param res
 	 */
+	@SuppressWarnings("resource")
 	public static void mergeFiles(String outFile, String res) {
 		if(StringUtils.isEmpty(outFile))
 			return;
@@ -135,9 +136,11 @@ public class FileUtil {
 		FileChannel outChannel = null;
 		try {
 			outChannel = new FileOutputStream(outFile).getChannel();
-			for (File f : files) {
-				@SuppressWarnings("resource")
-				FileChannel fc = new FileInputStream(f).getChannel();
+			File fileItem = null;
+			for(int i=1; i<=files.length; i++) {
+				logger.info(filePath+File.separator+String.valueOf(i)+".mp4********************%%%%%%%%%%%%%%%%%%%%%%%%%%%########################");
+				fileItem = new File(filePath + File.separator + String.valueOf(i) + ".mp4");
+				FileChannel fc = new FileInputStream(fileItem).getChannel();
 				ByteBuffer bb = ByteBuffer.allocate(BUFSIZE);
 				while (fc.read(bb) != -1) {
 					bb.flip();
@@ -181,9 +184,7 @@ public class FileUtil {
     }
     
 	public static void main(String[] args) {
-		mergeFiles(Constant.VIDEO_PATH + File.separator
-				+ "3786a1d2-3148-db74-f478-2579662a08e9.mp4",
-				Constant.VIDEO_PATH + File.separator
-						+ "3786a1d2-3148-db74-f478-2579662a08e9");
+		mergeFiles("C:\\Users\\mengtao\\Desktop\\tmp\\test.mp4",
+				"C:\\Users\\mengtao\\Desktop\\tmp\\test");
 	}
 }

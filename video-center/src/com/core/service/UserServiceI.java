@@ -15,4 +15,5 @@ public interface UserServiceI {
 	public User checkUser(String phone, String code);
 	public void updateGoldCount(Integer count, String id);
 	public Integer getGoldCount(String id);
+	public List<User> queryAllUser();
 }
