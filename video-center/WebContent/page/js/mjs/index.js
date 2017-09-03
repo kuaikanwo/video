@@ -15,17 +15,13 @@ function initPullrefresDom(){
 	initPullRefresh();
 }
 initPullrefresDom();
-//免注册观看小电影的次数
-if(!localStorage.localPlayCount)
-    localStorage.localPlayCount = 0;
-if(localStorage.localPlayCount == 0 && !mtools.getUserInfo())
-	mui.alert('第一次使用，可免登录观看10部小电影欧', '提示', function() {});
+
 mui('body').on('tap','a',function(){
     window.top.location.href=this.href;
 });
 var _btn = document.querySelector('#login-btn');
 if(mtools.getUserInfo()){
-	mtools.resetGoldCount(mtools.getEl('#species-count'));
+	
 	_btn.innerHTML = '<input type="text" id="name-btn" value="'+mtools.getUserInfo().name+'"/>';
 	_btn.setAttribute('href', 'javascript:void(0);');
 	mtools.getEl('#logoutLi').style.display = 'block';
@@ -53,7 +49,6 @@ function initPullRefresh(){
 	            }
 	        }
 	});
-	//mui('#pullrefresh').pullRefresh().pullupLoading();
 }
 
 
@@ -88,7 +83,7 @@ function pullupRefresh(){
             	            '</div>'+
             	            ' </div>'+
             	            ' <div onclick="alertCount()" class="mui-card-content">'+
-            	            '   <a href="play.html?thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="thumbnail/'+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
+            	            '   <a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="thumbnail/'+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
             	            '   <p class="video-title">'+obj[i].title+'</p>'+
             	            '  </div>'+
             	            '</div>';
@@ -110,7 +105,6 @@ function getVideoTitle(obj){
 	dom.style.display = 'block';
 	if(mtools.isEmpty(obj.value)){
 		mtools.getEl('.title-wrapper').innerHTML = '<li style="color: #007aff;" onclick="searchVideo(\' \')">查看全部</li>';
-		/*dom.style.display = 'none';*/
 	}else{
 		mui.ajax({
 			url: '/video/videoController.do?getTitles&title='+obj.value,
@@ -137,8 +131,8 @@ function sortVideo(type){
 	sortBy = type;
 	count = 0;
 	initPullrefresDom();
-	//mui('#pullrefresh').pullRefresh().pullupLoading();
 	mui('#pullrefresh').pullRefresh().pulldownLoading();
+	window.location.hash = "#pullrefresh";
 }
 
 function searchVideo(title){

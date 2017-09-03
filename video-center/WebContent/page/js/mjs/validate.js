@@ -71,32 +71,6 @@
 			},
 			trim: function(value){
 				return value.replace(/(^\s*)|(\s*$)/g, "");
-			},
-			resetGoldCount: function(obj){
-				//更新金币数量
-        		mui.ajax({
-        			url: '/video/userController.do?getGoldCount',
-        			type: 'POST',
-        			headers:{
-                		'userId': this.getUserId(),
-                		'token': this.getToken()
-                	},
-                	success: function(data){
-                		if(data.status != '1111'){
-                			if(window.localStorage.userInfo){
-                				var user = JSON.parse(window.localStorage.userInfo);
-                				user.goldCount = data.obj;
-                				window.localStorage.userInfo = JSON.stringify(user);
-                				if(obj){
-                					obj.innerHTML = data.obj;
-                				}
-                			}
-                		}
-                	},
-                	error: function(data){
-                		mui.toast('更新金币数量异常，请稍后重试！');
-                	}
-        		});
 			}
 	};
 	window.mtools = mtools;

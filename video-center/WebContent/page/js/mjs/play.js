@@ -6,7 +6,7 @@ mui.ready(function () {
 	var videoId = getUrlParam('id');
 	var videoTitle = getUrlParam('title');
 	var myVideo = document.querySelector('#m-video');
-	
+	var fileName = getUrlParam('fileName');
 	player = videojs('example_video_1', {
 	    "autoplay":false,
 	    "poster": getUrlParam('thumbnailPath'),
@@ -32,38 +32,13 @@ mui.ready(function () {
 
 	});
 	
-	if(localStorage.localPlayCount > 9){
-		if(mtools.isLogin()){
-			setPlaySrc(videoId);
-		}
-	}else{
-		localStorage.localPlayCount = (parseInt(localStorage.localPlayCount)+1);
-		setPlaySrc(videoId, 'YES');
-	}
-	
+	player.src(fileName);
 	
 	changeTitle(videoTitle);
 	initHot();
 	mui.toast('击播放按钮即可播放呦');
 });
 
-function setPlaySrc(videoId, isFree){
-	mui.ajax({
-		url: '/video/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId() + '&isFree=' + isFree,
-		dataType: 'json',
-		success: function(data){
-			if(data && data.status != '8888'){
-				player.src(data.obj);
-			}else{
-				mui.alert('您的金币不足，请上传视频以获得金币', '提示', function() {
-				});
-			}
-		},
-		error: function(){
-			mui.toast('系统异常，请稍后重试！code=102');
-		}
-	});
-}
 
 function changeTitle(title){
 	document.querySelector('#video-title').innerHTML = title;
@@ -72,17 +47,10 @@ function shareVideo(){
 	mui.toast('您可以使用浏览器自带的分享功能欧-_-');
 }
 
-function changePlay(posterPath, videoId, title){
+function changePlay(posterPath, fileName, title){
 	player.poster('thumbnail/' + posterPath);
 	
-	if(localStorage.localPlayCount > 9){
-		if(mtools.isLogin()){
-			setPlaySrc(videoId);
-		}
-	}else{
-		localStorage.localPlayCount = (parseInt(localStorage.localPlayCount)+1);
-		setPlaySrc(videoId, 'YES');
-	}
+	player.src(fileName);
 	
 	changeTitle(title);
 	initHot();
@@ -104,7 +72,7 @@ function initHot(){
 					obj = data.obj[i];
 					var li = document.createElement('li');
     	            li.className = 'mui-table-view-cell';
-    	            li.innerHTML = '<div   class="mui-card"><a href="javascript:changePlay(\''+obj.thumbnailPath+'\',\''+obj.id+'\',\''+obj.title+'\');"> '+
+    	            li.innerHTML = '<div   class="mui-card"><a href="javascript:changePlay(\''+obj.thumbnailPath+'\',\''+obj.fileName+'\',\''+obj.title+'\');"> '+
     	                '<div class="mui-card-header mui-card-media">'+
     	            '<img onerror="this.src=\'./resource/404.png\'" src="thumbnail/'+obj.thumbnailPath+'">'+
     	            '<div class="mui-media-body">'+

@@ -78,6 +78,25 @@ function showUpload () {
 var _file = null;
 function handleFiles(files){
 	if(files.length == 1){
+		var relSize = parseInt(files[0].size/1024/1024); 
+		if(relSize > 30){ // 大于10mb 
+			mui.alert('视频超过30MB,您可使用视频压缩工具进行压缩处理！', '提示', function() {});
+			return false; 
+		} 
+		// 查看视频类型 
+		var tv_id =mtools.getEl('#input_file').value;//根据id得到值 
+		var index= tv_id.indexOf("."); 
+		tv_id=tv_id.substring(index).toLowerCase(); 
+		/*if(tv_id!=".rb"&&tv_id!=".rmvb"&&tv_id!=".mp4"&&tv_id!=".flv"){ 
+			mui.alert('不是指定视频格式,请重新选择!', '提示', function() {});
+		    return false; 
+		} */
+		if(tv_id!=".mp4"){ 
+			mui.alert('请上传MP4格式的视频,谢谢!', '提示', function() {});
+		    return false; 
+		} 
+		
+		
         _file = files[0];
         mtools.getEl('.upload-window').style.display = 'block';
     }
@@ -110,33 +129,6 @@ function uploadVideo(obj){
 		mtools.getEl('#loading').style.display = 'block';
 		
 		doUpload();
-		/*var form = document.forms.namedItem("fileinfo");
-		var formData = new FormData(form);
-    	mui.ajax('/video/videoController.do?upload', {
-        	type: 'POST',
-        	async: 'true',
-        	headers:{
-        		'token': mtools.getToken(),
-        		'userId': mtools.getUserId(),
-        		'userName': mtools.getUserName()
-        	},
-        	data:formData,
-        	processData: false,
-        	contentType: false,
-    		beforeSend: function(data){
-    			obj.setAttribute('disabled', 'disabled');
-    			mui.toast('上传中');
-    			mtools.getEl('#loading').style.display = 'block';
-    		},
-        	success: function(data){
-        		closeUploadWindow();
-        		mtools.resetGoldCount();
-        		window.location.reload();
-        	},
-        	error: function(data){
-        		mui.toast('系统异常，请稍后重试！');
-        	}
-        });*/
 	}
 }
 
@@ -179,7 +171,6 @@ function doUpload(){
         		if(data.status == '2000'){
         			_file = null;
         			closeUploadWindow();
-            		mtools.resetGoldCount();
             		window.location.reload();
         		}
         	},

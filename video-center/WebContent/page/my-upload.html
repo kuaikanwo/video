@@ -107,12 +107,6 @@
 			display: inline-block;
     		margin-left: 10px;
 		}
-		#loading{
-			position: absolute;
-			bottom: -30px;
-		    left: 45%;
-		    display: none;
-		}
     </style>
 </head>
 
@@ -173,12 +167,24 @@
 			<div class="mui-button-row">
 				<button type="button" class="mui-btn mui-btn-primary" onclick="uploadVideo(this)" style="width: 80px;">上传</button>&nbsp;&nbsp;
 				<button type="button" class="mui-btn mui-btn-danger" style="width: 80px;" onclick="closeUploadWindow()">取消</button>&nbsp;&nbsp;
-				<span class="mui-spinner" id="loading" style=""></span>
 			</div>
 		</form>
 	</div>
 </div>
 <div class="mui-pull-bottom-pocket mui-block mui-visibility"><div class="mui-pull"><div class="mui-pull-loading mui-icon mui-spinner mui-visibility"></div><div class="mui-pull-caption mui-pull-caption-refresh">正在加载...</div></div></div>
+<div id="loading" style="display:none">
+	<div class="mui-popup mui-popup-in" style="display: block;">
+		<div class="mui-popup-inner">
+			<span class="mui-spinner"></span>
+		</div>
+		<div class="mui-popup-buttons">
+			<span class="mui-popup-button mui-popup-button-bold">
+				视频上传中，请不要关闭页面
+			</span>
+		</div>
+	</div>
+	<div class="mui-popup-backdrop mui-active" style="display: block;"></div>
+</div>
 </body>
 <script src="./js/mui.min.js"></script>
 <script language="javascript" type="text/javascript"> 
@@ -187,5 +193,5 @@
 	var number = now.getYear().toString()+now.getMonth().toString()+now.getDate().toString()+now.getHours().toString()+now.getMinutes().toString()+now.getSeconds().toString(); 
 	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/validate.js?'+number+'"><\/script>'); 
 	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/my-upload.js?'+number+'"><\/script>');
-</script> 
+</script>
 </html>
