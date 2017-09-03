@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>小小樱</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="shortcut icon" href="./images/favicon.ico"
+	type="image/x-icon" />
+
+</head>
+
+<body>
+	<p>用户信息列表，总计<span id="total"></span>人</p>
+	<table style="width: 100%; text-align: left;">
+		<thead>
+			<tr>
+				<th>电话</th>
+				<th>金币</th>
+			</tr>
+		</thead>
+		<tbody id="user-tab">
+		</tbody>
+	</table>
+
+</body>
+<script src="./js/mui.min.js"></script>
+<script language="javascript" type="text/javascript">
+	mui.ajax({
+		url : '/video/userController.do?queryAllUser',
+		type: 'GET',
+		success : function(data) {
+			if(data && data.obj){
+				document.querySelector('#total').innerHTML = data.obj.length;
+				var str = '';
+				for(var i=0; i<data.obj.length; i++){
+					str += '<tr><td>'+  data.obj[i].phone +'</td><td>'+  data.obj[i].goldCount +'</td></tr>';
+				}
+				document.querySelector('#user-tab').innerHTML = str;
+			}
+		},
+		error : function(data) {
+			mui.toast('系统异常，请稍后重试！');
+		}
+	});
+</script>
+</html>
