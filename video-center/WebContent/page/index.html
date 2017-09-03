@@ -72,18 +72,31 @@
 		</li> -->
 	</ul>
 </header>
-<div class="mui-content">
+<div class="mui-content" id="video-content">
+	<div style="padding: 10px 10px;">
+		<div id="segmentedControl" class="mui-segmented-control">
+			<a class="mui-control-item mui-active" href="javascript:sortVideo('all')">
+				全部
+			</a>
+			<a class="mui-control-item" href="javascript:sortVideo('hot')">
+				热门
+			</a>
+			<a class="mui-control-item" href="javascript:sortVideo('new')">
+				最新
+			</a>
+		</div>
+	</div>
 	<!--下拉刷新容器-->
-	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+	<!-- <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
 
 		<div class="mui-scroll">
-			<!--数据列表-->
+			数据列表
 			<ul class="mui-table-view" onclick="alertCount()" >
 
 			</ul>
 		</div>
 
-	</div>
+	</div> -->
 </div>
 </body>
 <script src="./js/mui.min.js"></script>

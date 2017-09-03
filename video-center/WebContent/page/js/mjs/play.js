@@ -3,14 +3,13 @@ mui.ready(function () {
 	document.querySelector('#back-btn').setAttribute('href', getUrlParam('last'));
 	document.body.style.overflow='hidden';
 	var thumbnailPath = getUrlParam('thumbnailPath');
-	var fileName = getUrlParam('fileName');
 	var videoId = getUrlParam('id');
 	var videoTitle = getUrlParam('title');
 	var myVideo = document.querySelector('#m-video');
 	
 	player = videojs('example_video_1', {
 	    "autoplay":false,
-	    "poster": '/video/fileController.do?readThumbnail&fileName=' + getUrlParam('thumbnailPath'),
+	    "poster": getUrlParam('thumbnailPath'),
 	    controlBar: {
 	        captionsButton: false,
 	        chaptersButton : false,
@@ -33,12 +32,38 @@ mui.ready(function () {
 
 	});
 	
-	if(mtools.isLogin()){
-		player.src('/video/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
+	if(localStorage.localPlayCount > 9){
+		if(mtools.isLogin()){
+			setPlaySrc(videoId);
+		}
+	}else{
+		localStorage.localPlayCount = (parseInt(localStorage.localPlayCount)+1);
+		setPlaySrc(videoId, 'YES');
 	}
+	
+	
 	changeTitle(videoTitle);
 	initHot();
+	mui.toast('击播放按钮即可播放呦');
 });
+
+function setPlaySrc(videoId, isFree){
+	mui.ajax({
+		url: '/video/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId() + '&isFree=' + isFree,
+		dataType: 'json',
+		success: function(data){
+			if(data && data.status != '8888'){
+				player.src(data.obj);
+			}else{
+				mui.alert('您的金币不足，请上传视频以获得金币', '提示', function() {
+				});
+			}
+		},
+		error: function(){
+			mui.toast('系统异常，请稍后重试！code=102');
+		}
+	});
+}
 
 function changeTitle(title){
 	document.querySelector('#video-title').innerHTML = title;
@@ -47,13 +72,21 @@ function shareVideo(){
 	mui.toast('您可以使用浏览器自带的分享功能欧-_-');
 }
 
-function changePlay(posterPath, fileName, videoId, title){
-	player.poster('/video/fileController.do?readThumbnail&fileName=' + posterPath);
-	if(mtools.isLogin()){
-		player.src('/video/videoController.do?downloadVideo&id=' + videoId + '&userId=' + mtools.getUserId());
+function changePlay(posterPath, videoId, title){
+	player.poster('thumbnail/' + posterPath);
+	
+	if(localStorage.localPlayCount > 9){
+		if(mtools.isLogin()){
+			setPlaySrc(videoId);
+		}
+	}else{
+		localStorage.localPlayCount = (parseInt(localStorage.localPlayCount)+1);
+		setPlaySrc(videoId, 'YES');
 	}
+	
 	changeTitle(title);
 	initHot();
+	mui.toast('击播放按钮即可播放呦');
 }
 
 function initHot(){
@@ -71,9 +104,9 @@ function initHot(){
 					obj = data.obj[i];
 					var li = document.createElement('li');
     	            li.className = 'mui-table-view-cell';
-    	            li.innerHTML = '<div   class="mui-card"><a href="javascript:changePlay(\''+obj.thumbnailPath+'\',\''+obj.fileName+'\',\''+obj.id+'\',\''+obj.title+'\');"> '+
+    	            li.innerHTML = '<div   class="mui-card"><a href="javascript:changePlay(\''+obj.thumbnailPath+'\',\''+obj.id+'\',\''+obj.title+'\');"> '+
     	                '<div class="mui-card-header mui-card-media">'+
-    	            '<img onerror="this.src=\'./resource/404.png\'" src="/video/fileController.do?readThumbnail&fileName='+obj.thumbnailPath+'">'+
+    	            '<img onerror="this.src=\'./resource/404.png\'" src="thumbnail/'+obj.thumbnailPath+'">'+
     	            '<div class="mui-media-body">'+
     	            obj.crtUserName+
     	            ' <p>发表于 '+obj.crtTime+'  '+obj.playCount+'次播放</p>'+

@@ -1,31 +1,62 @@
-mui.init({
-    pullRefresh:
-        {
-            container: '#pullrefresh',
-            up: {
-                contentrefresh: '正在加载...',
-                callback: pullupRefresh
-            }
-        }
+var sortBy = null;
+var parentObj = mtools.getEl('#video-content');
+var pullrefreshDom = mtools.getEl('#pullrefresh');
+if(pullrefreshDom){
+	parentObj.removeChild(pullrefreshDom);
+	alert('已移除');
+}	
+
+var divObj = document.createElement('div');
+divObj.setAttribute('id','pullrefresh')
+divObj.setAttribute('class','mui-content mui-scroll-wrapper')
+divObj.innerHTML = '<div class="mui-scroll"><ul class="mui-table-view" onclick="alertCount()" ></ul></div>';
+parentObj.appendChild(divObj);
+function initPullrefresDom(){
+	initPullRefresh();
+}
+initPullrefresDom();
+//免注册观看小电影的次数
+if(!localStorage.localPlayCount)
+    localStorage.localPlayCount = 0;
+if(localStorage.localPlayCount == 0 && !mtools.getUserInfo())
+	mui.alert('第一次使用，可免登录观看10部小电影欧', '提示', function() {});
+mui('body').on('tap','a',function(){
+    window.top.location.href=this.href;
 });
-mui.ready(function () {
-    mui('#pullrefresh').pullRefresh().pullupLoading();
-    mui('body').on('tap','a',function(){
-        window.top.location.href=this.href;
-    });
-    var _btn = document.querySelector('#login-btn');
-    if(mtools.getUserInfo()){
-    	mtools.resetGoldCount(mtools.getEl('#species-count'));
-    	_btn.innerHTML = '<input type="text" id="name-btn" value="'+mtools.getUserInfo().name+'"/>';
-    	_btn.setAttribute('href', 'javascript:void(0);');
-    	mtools.getEl('#logoutLi').style.display = 'block';
-    }else{
-    	_btn.innerHTML = '立即登陆';
-    	_btn.setAttribute('href', 'register.html');
-    	mtools.getEl('#logoutLi').style.display = 'none';
-    }
-});
+var _btn = document.querySelector('#login-btn');
+if(mtools.getUserInfo()){
+	mtools.resetGoldCount(mtools.getEl('#species-count'));
+	_btn.innerHTML = '<input type="text" id="name-btn" value="'+mtools.getUserInfo().name+'"/>';
+	_btn.setAttribute('href', 'javascript:void(0);');
+	mtools.getEl('#logoutLi').style.display = 'block';
+}else{
+	_btn.innerHTML = '立即登陆';
+	_btn.setAttribute('href', 'register.html');
+	mtools.getEl('#logoutLi').style.display = 'none';
+}
+
 var count = 0;
+
+function initPullRefresh(){
+	mui.init({
+	    pullRefresh:
+	        {
+	            container: '#pullrefresh',
+	            up: {
+	            	auto: true,
+	                contentrefresh: '正在加载...',
+	                callback: pullupRefresh
+	            },
+	            down: {
+	            	height: '0px',
+	                callback: pullupRefresh
+	            }
+	        }
+	});
+	//mui('#pullrefresh').pullRefresh().pullupLoading();
+}
+
+
 
 /*
  * 上拉加载具体业务实现
@@ -33,7 +64,7 @@ var count = 0;
 function pullupRefresh(){
     setTimeout(function() {
     	mui.ajax({
-    		url: '/video/videoController.do?queryAll&pageNo='+count+'&title='+mtools.getEl('.search-input').value,
+    		url: '/video/videoController.do?queryAll&pageNo='+count+'&title='+mtools.getEl('.search-input').value + '&sortBy='+ sortBy,
         	type: 'POST',
         	processData: false,
         	contentType: false,
@@ -57,7 +88,7 @@ function pullupRefresh(){
             	            '</div>'+
             	            ' </div>'+
             	            ' <div onclick="alertCount()" class="mui-card-content">'+
-            	            '   <a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="/video/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
+            	            '   <a href="play.html?thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="thumbnail/'+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
             	            '   <p class="video-title">'+obj[i].title+'</p>'+
             	            '  </div>'+
             	            '</div>';
@@ -99,6 +130,15 @@ function getVideoTitle(obj){
 			}
 		});
 	}
+}
+
+function sortVideo(type){
+	document.body.querySelector('.mui-table-view').innerHTML = '';
+	sortBy = type;
+	count = 0;
+	initPullrefresDom();
+	//mui('#pullrefresh').pullRefresh().pullupLoading();
+	mui('#pullrefresh').pullRefresh().pulldownLoading();
 }
 
 function searchVideo(title){

@@ -42,7 +42,7 @@ function pullupRefresh(){
             	            li.className = 'mui-table-view-cell';
             	            li.innerHTML = '<div class="mui-card"><a href="play.html?title='+obj[i].title+'&thumbnailPath='+obj[i].thumbnailPath+'&fileName='+obj[i].fileName+'&id='+obj[i].id+'&last=my-upload.html">'+
             	                '<div class="mui-card-header mui-card-media">'+
-            	            '<img onerror="this.src=\'./resource/404.png\'"  src="/video/fileController.do?readThumbnail&fileName='+obj[i].thumbnailPath+'">'+
+            	            '<img onerror="this.src=\'./resource/404.png\'"  src="thumbnail/'+obj[i].thumbnailPath+'">'+
             	            '<div class="mui-media-body">'+
             	           obj[i].crtUserName+ '<span class="video-title">'+obj[i].title+'</span>' +
             	            ' <p>发表于 '+obj[i].crtTime+'   '+obj[i].playCount+'次播放</p>'+
@@ -177,6 +177,7 @@ function doUpload(){
         	contentType: false,
         	success: function(data){
         		if(data.status == '2000'){
+        			_file = null;
         			closeUploadWindow();
             		mtools.resetGoldCount();
             		window.location.reload();
