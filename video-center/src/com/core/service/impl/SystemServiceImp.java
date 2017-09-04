@@ -69,4 +69,9 @@ public class SystemServiceImp implements SystemServiceI{
 	public List<PlayGross> getPlayGross() {
 		return systemMapper.getPlayGross();
 	}
+
+	@Override
+	public Integer getCurrentPlayGross() {
+		return systemMapper.getCurrentPlayGross();
+	}
 }

@@ -35,6 +35,9 @@
 		</header>
 		<div class="mui-content"> 
 			<div class="mui-content-padded">
+				<h5>当前播放总量：<span style="color:red" id="playCount"></span></h5>
+			</div>
+			<div class="mui-content-padded">
 				<h5>柱图分析</h5>
 				<div class="chart" id="barChart"></div>
 				<h5>线图分析</h5>
@@ -44,11 +47,23 @@
 		
 		<script src="../js/echarts.min.js"></script>
 		<script>
-		mui('body').on('tap','a',function(){
-		    window.top.location.href=this.href;
-		});
-		var xDate = [];
-		var yData = [];
+			mui('body').on('tap','a',function(){
+			    window.top.location.href=this.href;
+			});
+			var xDate = [];
+			var yData = [];
+			mui.ajax({
+				url : '/video/sysController.do?queryCurrentPlayGross',
+				type: 'GET',
+				success : function(data) {
+					if(data && data.obj){
+						byId('playCount').innerHTML = data.obj;
+					}
+				},
+				error : function(data) {
+					mui.toast('系统异常，请稍后重试！');
+				}
+			});
 			function initData(){
 				
 				//播放量统计

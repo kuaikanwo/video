@@ -23,6 +23,20 @@ public class SystemController {
 	private SystemServiceI systemService;
 	
 	/**
+	 * 查询当前播放总量
+	 * @param user
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(params = "queryCurrentPlayGross")
+	@ResponseBody
+	public AjaxJson queryCurrentPlayGross(HttpServletRequest req) {
+		AjaxJson j = new AjaxJson();
+        j.setObj(systemService.getCurrentPlayGross());
+		return j;
+	}
+	
+	/**
 	 * 查询播放总量
 	 * @param user
 	 * @param req

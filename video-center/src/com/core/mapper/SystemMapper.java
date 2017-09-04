@@ -14,4 +14,5 @@ public interface SystemMapper {
 	
 	void addPlayGross(String id, Date crtDate);
 	List<PlayGross> getPlayGross();
+	Integer getCurrentPlayGross();
 }

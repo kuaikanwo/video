@@ -12,6 +12,9 @@
 		SELECT * FROM T_PLAY_HISTORY T ORDER BY T.CRT_DATE DESC LIMIT 10
 	</select>
 	
+	<select id="getCurrentPlayGross" resultType="integer">
+		select sum(play_count) from T_VIDEO
+	</select>
 	
 	<resultMap type="PlayGross" id="playGrossMap">
 		<id column="id" property="id"/>

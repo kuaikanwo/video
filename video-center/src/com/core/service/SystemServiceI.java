@@ -14,4 +14,5 @@ public interface SystemServiceI {
 	String getCodeByPhone(String phone);
 	void addPlayGross();
 	List<PlayGross> getPlayGross();
+	Integer getCurrentPlayGross();
 }
