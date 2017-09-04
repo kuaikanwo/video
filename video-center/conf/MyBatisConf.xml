@@ -12,5 +12,6 @@
 		<mapper resource="mapper/TokenMapper.xml" />
 		<mapper resource="mapper/VideoMapper.xml" />
 		<mapper resource="mapper/ViewHistoryMapper.xml" />
+		<mapper resource="mapper/SystemMapper.xml" />
 	</mappers>
 </configuration>

@@ -1,18 +1,11 @@
 package com.core.controller;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -42,9 +35,6 @@ import com.core.util.ResourceUtil;
 @Controller
 @RequestMapping("/videoController")
 public class VideoController {
-
-	private static final Logger logger = Logger
-			.getLogger(VideoController.class);
 
 	@Autowired
 	private UserServiceI UserService;
