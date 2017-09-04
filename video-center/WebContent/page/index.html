@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="./css/icons-extra.css" />
 	<link href="./css/icon.css" rel="stylesheet" />
 	<link href="./css/mcss/index.css" rel="stylesheet" />
+	<link rel="stylesheet" href="./iscroll/style/main.css" />
 </head>
 
 <body  style="background-color: #efeff4;" oncontextmenu="return false" onselectstart="return false">
@@ -73,7 +74,7 @@
 	</ul>
 </header>
 <div class="mui-content" id="video-content">
-	<div style="padding: 10px 10px;">
+	<div style="padding: 10px 10px;background-color: #ffffff;">
 		<div id="segmentedControl" class="mui-segmented-control">
 			<a class="mui-control-item mui-active" href="javascript:sortVideo('all')">
 				全部
@@ -86,20 +87,41 @@
 			</a>
 		</div>
 	</div>
-	<!--下拉刷新容器-->
-	<!-- <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
-
-		<div class="mui-scroll">
-			数据列表
-			<ul class="mui-table-view" onclick="alertCount()" >
-
-			</ul>
+	<!-- 下拉刷新容器 -->
+	<div id="wrapper">
+	<div id="scroller">
+		<div id="pullDown">
+			<span class="pullDownLabel">下拉刷新</span>
 		</div>
-
-	</div> -->
+		<ul id="thelist">
+			<li>
+				<div>
+					<a>
+						<img alt="" src="./images/abcd.jpg">
+						<p class="video-title">精彩的视频精彩的视频精彩的视频精彩的视频</p>
+						<img alt="" src="./images/xiongbenxiong.jpg" class="user-pic">
+						<span class="play-count">
+							200人浏览
+						</span>
+					</a>
+				</div>
+				<div>
+					<a>
+						<img alt="" src="./images/abcd.jpg">
+						<p class="video-title">精彩的视频</p>
+					</a>
+				</div>
+			</li>
+		</ul>
+		<div id="pullUp">
+			<span class="pullUpLabel">上拉加载更多</span>
+		</div>
+	</div>
+</div>
 </div>
 </body>
 <script src="./js/mui.min.js"></script>
+<script type="text/javascript" src="./iscroll/script/iscroll.js"></script>
 <script language="javascript" type="text/javascript"> 
 	//防止js文件缓存下来，以后更新时不再需要用户重新删除IE文件等操作。 
 	var now=new Date(); 
@@ -107,4 +129,5 @@
 	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/validate.js?'+number+'"><\/script>'); 
 	document.write('<script language="javascript" type="text/javascript" src="./js/mjs/index.js?'+number+'"><\/script>');
 </script> 
+<!-- <script type="text/javascript" src="./iscroll/script/main.js"></script> -->
 </html>

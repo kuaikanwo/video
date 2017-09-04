@@ -1,20 +1,5 @@
 var sortBy = null;
-var parentObj = mtools.getEl('#video-content');
-var pullrefreshDom = mtools.getEl('#pullrefresh');
-if(pullrefreshDom){
-	parentObj.removeChild(pullrefreshDom);
-	alert('已移除');
-}	
 
-var divObj = document.createElement('div');
-divObj.setAttribute('id','pullrefresh')
-divObj.setAttribute('class','mui-content mui-scroll-wrapper')
-divObj.innerHTML = '<div class="mui-scroll"><ul class="mui-table-view" onclick="alertCount()" ></ul></div>';
-parentObj.appendChild(divObj);
-function initPullrefresDom(){
-	initPullRefresh();
-}
-initPullrefresDom();
 
 mui('body').on('tap','a',function(){
     window.top.location.href=this.href;
@@ -32,26 +17,6 @@ if(mtools.getUserInfo()){
 }
 
 var count = 0;
-
-function initPullRefresh(){
-	mui.init({
-	    pullRefresh:
-	        {
-	            container: '#pullrefresh',
-	            up: {
-	            	auto: true,
-	                contentrefresh: '正在加载...',
-	                callback: pullupRefresh
-	            },
-	            down: {
-	            	height: '0px',
-	                callback: pullupRefresh
-	            }
-	        }
-	});
-}
-
-
 
 /*
  * 上拉加载具体业务实现

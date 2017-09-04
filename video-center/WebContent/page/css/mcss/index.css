@@ -1,23 +1,3 @@
-#pullrefresh {
-	top: 100px;
-}
-
-.mui-table-view-cell {
-	padding: 0px;
-}
-
-.mui-table-view-cell::after {
-	height: 0px;
-}
-
-.mui-table-view {
-	background-color: #efeff4;
-}
-
-.mui-card {
-	margin: 10px 10px 0px 10px;
-}
-
 #icon-icon-contact {
 	color: #8F8F94;
 }
@@ -215,12 +195,56 @@ input {
 .video-title{
 	position: absolute;
     left: 0;
-    bottom: 6px;
+    bottom: 40px;
     height: 40px;
+    padding: 0px 5px;
     line-height: 40px;
     text-align: center;
-    font-size: 16px;
+    font-size: 15px;
     color: #ffffff;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    -o-text-overflow:ellipsis;
+    white-space:nowrap;
 }
+.user-pic{
+	position: absolute;
+}
+#thelist>li{
+	display: flex;
+}
+#thelist>li>div{
+	position: relative;
+	flex: 1;
+	display: inline-block;
+}
+#thelist>li>div>a{
+	position: relative;
+	display: inline-block;
+}
+#thelist>li div:first-child{
+	padding-right:2px;
+}
+#thelist>li div:last-child{
+	padding-left:2px;
+}
+#thelist>li>div>a>img{
+	max-width: 100%;
+	border-radius: 4px;
+}
+.user-pic{
+	width: 25px;
+    border-radius: 25px !important;
+    position: absolute;
+    bottom: 32px;
+    left: 10px;
+}
+.play-count{
+	position: absolute;
+    left: 40px;
+    bottom: 14px;
+    color: #ffffff;
+    font-size: 13px;
+}
+
