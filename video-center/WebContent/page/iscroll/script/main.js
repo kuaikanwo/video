@@ -61,11 +61,6 @@ function loaded() {
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);//阻止冒泡
 document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 0); }, false);
 
-function test(){
-	
-	alert('hahah');
-}
-
 //初始状态，加载数据
 function loadAction(){
 	loadData();
