@@ -16,55 +16,6 @@ if(mtools.getUserInfo()){
 	mtools.getEl('#logoutLi').style.display = 'none';
 }
 
-var count = 0;
-
-/*
- * 上拉加载具体业务实现
- */
-function pullupRefresh(){
-    setTimeout(function() {
-    	mui.ajax({
-    		url: '/video/videoController.do?queryAll&pageNo='+count+'&title='+mtools.getEl('.search-input').value + '&sortBy='+ sortBy,
-        	type: 'POST',
-        	processData: false,
-        	contentType: false,
-        	success: function(data){
-        			var obj = data.obj;
-            		if(obj.length==0){
-            			mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
-            		}else{
-            			var table = document.body.querySelector('.mui-table-view');
-            	        var cells = document.body.querySelectorAll('.mui-table-view-cell');
-
-            	        for (var i = 0; i < obj.length; i++) {
-            	        	var li = document.createElement('li');
-            	            li.className = 'mui-table-view-cell';
-            	            li.innerHTML = '<div   class="mui-card">'+
-            	                '<div class="mui-card-header mui-card-media">'+
-            	            '<img src="./images/girl.png">'+
-            	            '<div class="mui-media-body">'+
-            	            obj[i].crtUserName+
-            	            ' <p>发表于 '+obj[i].crtTime+'  '+obj[i].playCount+'次播放</p>'+
-            	            '</div>'+
-            	            ' </div>'+
-            	            ' <div onclick="alertCount()" class="mui-card-content">'+
-            	            '   <a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"><img onerror="this.src=\'./resource/404.png\'" src="thumbnail/'+obj[i].thumbnailPath+'" alt="" width="100%"></a>'+
-            	            '   <p class="video-title">'+obj[i].title+'</p>'+
-            	            '  </div>'+
-            	            '</div>';
-            	            table.appendChild(li);
-            	        }
-            	        mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
-            	        count ++;
-        		}
-        	},
-        	error: function(data){
-        		mui.toast('系统异常，请稍后重试！');
-        	}
-        });
-    }, 100);
-}
-
 function getVideoTitle(obj){
 	var dom = mtools.getEl('.search-content-wrapper');
 	dom.style.display = 'block';
@@ -92,21 +43,18 @@ function getVideoTitle(obj){
 }
 
 function sortVideo(type){
-	document.body.querySelector('.mui-table-view').innerHTML = '';
 	sortBy = type;
 	count = 0;
-	initPullrefresDom();
-	mui('#pullrefresh').pullRefresh().pulldownLoading();
-	window.location.hash = "#pullrefresh";
+	mtools.getEl('#thelist').innerHTML = '';
+	resetPage();
 }
 
 function searchVideo(title){
 	mtools.getEl('.search-input').value = title.trim();
 	mtools.getEl('.search-content-wrapper').style.display = 'none';
 	count = 0;
-	mtools.getEl('.mui-table-view').innerHTML = '';
-	mui('#pullrefresh').pullRefresh().pullupLoading();
-	mui('#pullrefresh').pullRefresh().pullupLoading();
+	mtools.getEl('#thelist').innerHTML = '';
+	resetPage();
 }
 
 
@@ -133,5 +81,5 @@ function alertCount() {
 
 function clearLoginInfo(){
 	window.localStorage.userInfo = '';
-	window.location.href=window.location.href; 
+	window.location.reload(); 
 }

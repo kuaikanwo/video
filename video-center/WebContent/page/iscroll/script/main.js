@@ -17,6 +17,7 @@ function loaded() {
 			if (pullDownEl.className.match('loading')) {
 				pullDownEl.className = '';
 				pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新';
+				pullUpAction();
 			} else if (pullUpEl.className.match('loading')) {
 				pullUpEl.className = '';
 				pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多';
@@ -81,6 +82,8 @@ function pullDownAction () {
 
 //上拉加载更多数据
 function pullUpAction () {
+	count = 0;
+	mtools.getEl('#thelist').innerHTML = '';
 	loadData();
 }
 
@@ -102,9 +105,19 @@ function loadData(){
         		}else{
         			var el, li;
         			el = mtools.getEl('#thelist');
+        			
         			for (var i = 0; i < obj.length; i++) {
-        				li = document.createElement('li');
-        				li.innerHTML = '播放次数：' + obj[i].playCount+','+obj[i].crtUserName;
+        				li = document.createElement('div');
+        				if((i % 2) != 0)
+        					li.setAttribute('class', 'float-right');
+        				li.innerHTML =  '<a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"> '+
+						    			'	<img alt="" src="thumbnail/'+obj[i].thumbnailPath+'"> '+
+						    			'	<p class="video-title">'+obj[i].title+'</p> '+
+						    			'	<img alt="" src="./images/xiongbenxiong.jpg" class="user-pic"> '+
+						    			'	<span class="play-count"> '+
+						    			obj[i].playCount +'		人浏览 '+
+						    			'	</span> '+
+						    			'</a>';
         				el.appendChild(li, el.childNodes[0]);
         			}
         			myScroll.refresh();
