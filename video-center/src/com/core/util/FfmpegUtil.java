@@ -38,7 +38,7 @@ public class FfmpegUtil {
 		String videoName = inFile.substring(0, index);
 		String outFile = "/usr/local/video/static/thumbnail/" + videoName + ".jpg";
 		String command = "ffmpeg -i " + Constant.VIDEO_PATH+inFile
-				+ " -y -f image2 -ss 00:00:1 -t 00:00:01 -s 176x144 "
+				+ " -y -f image2 -ss 00:00:1 -t 00:00:01 -s 195x260 "
 				+ outFile;
 		
 		try {
