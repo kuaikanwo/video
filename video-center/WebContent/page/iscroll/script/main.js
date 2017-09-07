@@ -101,18 +101,44 @@ function loadData(){
         			var el, li;
         			el = mtools.getEl('#thelist');
         			
+        			
+        			var advertising = [
+        					           	{
+        					           		"banner": "https://img.alicdn.com/imgextra/i2/3009067882/TB2z69BazmfF1JjSspcXXXZMXXa_!!3009067882.jpg_800x800Q30.jpg_.webp",
+        					           		"link": "https://ju.taobao.com/m/jusp/alone/detailwap/mtp.htm?item_id=542040095159&_target=_blank&spm=608.7719685.remaif1.1.7a54a0a0dpAZEH&_target=_blank&_force=wap&item_id=542040095159&bucket=7&impid=6be27sUaPF&pageno=1&floorIndex=3&is_jusp=1&_target=_blank&_format=true"
+        					           	},
+        					           	{
+        					           		"banner": "https://img.alicdn.com/imgextra/i4/2386428115/TB2ScH8d5wIL1JjSZFsXXcXFFXa_!!2386428115.jpg_800x800Q30.jpg_.webp",
+        					           		"link": "https://ju.taobao.com/m/jusp/alone/detailwap/mtp.htm?item_id=45414754763&_target=_blank&spm=608.7719685.remaif1.4.7a54a0a0M6HaYm&_target=_blank&_force=wap&item_id=45414754763&bucket=7&impid=6be24hieXQ&pageno=1&floorIndex=3&is_jusp=1&_target=_blank&_format=true"
+        					           	} 
+        				           ];
+        			
+        			
         			for (var i = 0; i < obj.length; i++) {
         				li = document.createElement('div');
         				if((i % 2) != 0)
         					li.setAttribute('class', 'float-right');
-        				li.innerHTML =  '<a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"> '+
-						    			'	<img alt="" src="thumbnail/'+obj[i].thumbnailPath+'"> '+
-						    			'	<p class="video-title">'+obj[i].title+'</p> '+
-						    			'	<img alt="" src="./images/xiongbenxiong.jpg" class="user-pic"> '+
-						    			'	<span class="play-count"> '+
-						    			obj[i].playCount +'		人浏览 '+
-						    			'	</span> '+
-						    			'</a>';
+        				//
+        				if(i != 0 && (i%10 == 0) && advertising[i/10-1]){
+        					//显示广告位
+    						var bannerObj = advertising[i/10-1];
+        					li.innerHTML =  '<a href="'+bannerObj.link+'"> '+
+    		    			'	<img alt="" src="'+bannerObj.banner+'"> '+
+    		    			'</a>';
+        					el.appendChild(li, el.childNodes[0]);
+        				}
+        				
+        				li = document.createElement('div');
+        				if((i % 2) != 0)
+        					li.setAttribute('class', 'float-right');
+    					li.innerHTML =  '<a href="play.html?fileName='+obj[i].fileName+'&thumbnailPath='+obj[i].thumbnailPath+'&id='+obj[i].id+'&last=index.html&title='+obj[i].title+'"> '+
+		    			'	<img alt="" src="./images/111.jpg"> '+
+		    			'	<p class="video-title">dddd</p> '+
+		    			'	<img alt="" src="./images/xiongbenxiong.jpg" class="user-pic"> '+
+		    			'	<span class="play-count"> '+
+		    			obj[i].playCount +'		人浏览 '+
+		    			'	</span> '+
+		    			'</a>';
         				el.appendChild(li, el.childNodes[0]);
         			}
         			myScroll.refresh();
