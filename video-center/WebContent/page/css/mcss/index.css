@@ -222,8 +222,10 @@ input {
 #thelist>div>a{
 	position: relative;
 	display: inline-block;
+	width: 100%
 }
 #thelist>div>a img:first-child{
+	width: 100%;
 	max-width: 100%;
 	border-radius: 4px;
 }
